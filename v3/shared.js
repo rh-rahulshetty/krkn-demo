@@ -1,5 +1,23 @@
 function initCluster(scenarioRunner) {
   document.addEventListener('DOMContentLoaded', function() {
+    var toggle = document.getElementById('theme-toggle');
+    if (toggle) {
+      var sunIcon = toggle.querySelector('.theme-icon-sun');
+      var moonIcon = toggle.querySelector('.theme-icon-moon');
+      function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        sunIcon.style.display = theme === 'dark' ? 'none' : '';
+        moonIcon.style.display = theme === 'dark' ? '' : 'none';
+      }
+      if (localStorage.getItem('theme') === 'dark') applyTheme('dark');
+      toggle.addEventListener('click', function() {
+        var isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        var next = isDark ? 'light' : 'dark';
+        applyTheme(next);
+        localStorage.setItem('theme', next);
+      });
+    }
+
     var cluster = document.getElementById('cluster');
     var svgEl = document.getElementById('svg-layer');
     var cRect = cluster.getBoundingClientRect();
@@ -102,7 +120,20 @@ function initCluster(scenarioRunner) {
     var POD_SVG_BLUE = '<svg viewBox="0 0 24 24" fill="none" stroke="#2980b9" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg>';
     var POD_SVG_GREEN = '<svg viewBox="0 0 24 24" fill="none" stroke="#1e8449" stroke-width="2"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/></svg>';
 
-    function wait(ms) { return new Promise(function(r) { setTimeout(r, ms); }); }
+    var pacingParam = (new URLSearchParams(window.location.search)).get('pacing');
+    var pacing = parseFloat(pacingParam);
+    if (isNaN(pacing) || pacing <= 0) pacing = 2;
+    pacing = Math.max(0.25, Math.min(4, pacing));
+    console.log('[Krkn] Pacing multiplier: ' + pacing + 'x (param: ' + pacingParam + ')');
+
+    var fontScaleParam = (new URLSearchParams(window.location.search)).get('fontScale');
+    var fontScale = parseFloat(fontScaleParam);
+    if (isNaN(fontScale) || fontScale <= 0) fontScale = 1;
+    fontScale = Math.max(0.8, Math.min(1.5, fontScale));
+    cluster.style.setProperty('--font-scale', fontScale);
+    console.log('[Krkn] Font scale: ' + fontScale + 'x (param: ' + fontScaleParam + ')');
+
+    function wait(ms) { return new Promise(function(r) { setTimeout(r, ms * pacing); }); }
 
     // ── Phase counter ──
     function setPhase(num, title, subtitle, color, owner) {
@@ -131,10 +162,12 @@ function initCluster(scenarioRunner) {
       entry.innerHTML = '<div class="event-dot" style="background:' + (EVENT_COLORS[color] || EVENT_COLORS.green) + '"></div>' +
         '<span class="event-time">' + timeStr + '</span>' +
         '<span class="event-text">' + text + '</span>';
-      eventListEl.appendChild(entry);
-      eventListEl.scrollTop = eventListEl.scrollHeight;
+      if (eventListEl) {
+        eventListEl.appendChild(entry);
+        eventListEl.scrollTop = eventListEl.scrollHeight;
+      }
     }
-    function clearEvents() { eventListEl.innerHTML = ''; }
+    function clearEvents() { if (eventListEl) eventListEl.innerHTML = ''; }
 
     // ── SLO metrics ──
     function updateSLO(avail, latency, errorRate) {
@@ -235,19 +268,28 @@ function initCluster(scenarioRunner) {
     }
 
     // ── Chaos dot + line ──
+    function fireVignette() {
+      var v = document.createElement('div');
+      v.className = 'chaos-vignette';
+      cluster.appendChild(v);
+      setTimeout(function() { v.remove(); }, 700);
+    }
+
     function fireChaosDot() {
       var dot = document.createElement('div');
       dot.className = 'chaos-inject-dot';
       dot.style.setProperty('--path', "path('" + chaosPathD + "')");
       cluster.appendChild(dot);
+      fireVignette();
       setTimeout(function() { dot.remove(); }, 1400);
     }
 
     var chaosLineEl = null;
     function showChaosLine() {
       chaosLineEl = drawLine(krknL.x, krknC.y, apiR.x + 6, apiC.y, {
-        stroke: '#e67e22', width: '1.5', dash: '6 4', marker: 'arr-o'
+        stroke: '#e67e22', width: '3', marker: 'arr-o'
       });
+      chaosLineEl.setAttribute('filter', 'url(#chaos-glow)');
       chaosLineEl.style.opacity = '0';
       chaosLineEl.style.transition = 'opacity 0.4s ease';
       requestAnimationFrame(function() { chaosLineEl.style.opacity = '1'; });
@@ -316,6 +358,15 @@ function initCluster(scenarioRunner) {
       if (currentLabel) { currentLabel.remove(); currentLabel = null; }
     }
 
+    // ── Legend visibility ──
+    var legendRow = document.querySelector('.legend-row');
+    function hideLegend() {
+      if (legendRow) legendRow.style.opacity = '0';
+    }
+    function showLegend() {
+      if (legendRow) legendRow.style.opacity = '1';
+    }
+
     // ── Focus mode ──
     function enterFocusMode(dimPod4) {
       if (dimPod4 === undefined) dimPod4 = true;
@@ -325,6 +376,7 @@ function initCluster(scenarioRunner) {
       flowConns.forEach(function(fc) { fc.classList.add('focus-dim-lite'); });
       etcd.classList.add('focus-dim-lite');
       scheduler.classList.add('focus-dim-lite');
+      hideLegend();
     }
     function exitFocusMode() {
       wn1.classList.remove('focus-dim');
@@ -333,6 +385,7 @@ function initCluster(scenarioRunner) {
       flowConns.forEach(function(fc) { fc.classList.remove('focus-dim-lite'); });
       etcd.classList.remove('focus-dim-lite');
       scheduler.classList.remove('focus-dim-lite');
+      showLegend();
     }
 
     // ── Node status tags ──
@@ -371,6 +424,8 @@ function initCluster(scenarioRunner) {
     var lfSteps = [];
 
     function setLifecycle(title, steps) {
+      var lcSection = document.getElementById('el-lifecycle');
+      if (lcSection) lcSection.style.display = '';
       document.getElementById('el-lifecycle-title').textContent = title;
       var flow = document.getElementById('el-lifecycle-flow');
       flow.innerHTML = steps.map(function(step, i) {
@@ -523,6 +578,121 @@ function initCluster(scenarioRunner) {
       if (helperBadge) { helperBadge.remove(); helperBadge = null; }
     }
 
+    // ── Krkn inline command ──
+    var krknCmdEl = document.getElementById('el-krkn-cmd');
+    var krknTypeTimer = null;
+    function showKrknTerminal(cmd) {
+      if (!krknCmdEl) return;
+      hideKrknTerminal();
+      krknCmdEl.style.display = '';
+      var full = '$ ' + cmd;
+      var i = 0;
+      krknCmdEl.innerHTML = '<span class="krkn-cursor"></span>';
+      krknTypeTimer = setInterval(function() {
+        if (i < full.length) {
+          krknCmdEl.innerHTML = full.substring(0, ++i) + '<span class="krkn-cursor"></span>';
+        } else {
+          clearInterval(krknTypeTimer);
+          krknTypeTimer = null;
+        }
+      }, 40);
+    }
+    function hideKrknTerminal() {
+      if (krknTypeTimer) { clearInterval(krknTypeTimer); krknTypeTimer = null; }
+      if (krknCmdEl) { krknCmdEl.style.display = 'none'; krknCmdEl.innerHTML = ''; }
+    }
+
+    // ── Onboarding overlay ──
+    function showOnboarding() {
+      var el = document.getElementById('el-onboarding');
+      if (!el) return;
+      el.style.display = '';
+      el.style.opacity = '0';
+      var card = el.querySelector('.onboarding-card');
+      card.style.animation = 'none';
+      card.offsetHeight;
+      card.style.animation = 'fadeInScale 0.6s ease-out both';
+      requestAnimationFrame(function() { el.style.opacity = '1'; });
+    }
+    function hideOnboarding() {
+      var el = document.getElementById('el-onboarding');
+      if (!el) return;
+      el.style.opacity = '0';
+      setTimeout(function() { el.style.display = 'none'; }, 500);
+    }
+
+    // ── Targeting + blast radius ──
+    var targetReticle = null;
+    var krknTargetLabel = null;
+    function showTargeting(targetEl, targetName) {
+      clearTargeting();
+      var r = targetEl.getBoundingClientRect();
+      var ox = r.left - cRect.left;
+      var oy = r.top - cRect.top;
+      var padding = 6;
+      var ret = document.createElement('div');
+      ret.className = 'target-reticle';
+      ret.style.left = (ox - padding) + 'px';
+      ret.style.top = (oy - padding) + 'px';
+      ret.style.width = (r.width + padding * 2) + 'px';
+      ret.style.height = (r.height + padding * 2) + 'px';
+      cluster.appendChild(ret);
+      targetReticle = ret;
+      var label = document.createElement('div');
+      label.className = 'krkn-target-label';
+      label.textContent = 'TARGET: ' + targetName;
+      krkn.appendChild(label);
+      krknTargetLabel = label;
+    }
+    function clearTargeting() {
+      if (targetReticle) { targetReticle.remove(); targetReticle = null; }
+      if (krknTargetLabel) { krknTargetLabel.remove(); krknTargetLabel = null; }
+    }
+    function fireBlastRing(targetEl) {
+      var r = targetEl.getBoundingClientRect();
+      var ox = r.left - cRect.left + r.width / 2;
+      var oy = r.top - cRect.top + r.height / 2;
+      var ring = document.createElement('div');
+      ring.className = 'blast-ring';
+      ring.style.left = ox + 'px';
+      ring.style.top = oy + 'px';
+      cluster.appendChild(ring);
+      setTimeout(function() { ring.remove(); }, 900);
+    }
+
+    // ── Transition fade ──
+    var transitionEl = document.getElementById('el-transition');
+    function fadeOut() {
+      return new Promise(function(resolve) {
+        if (!transitionEl) return resolve();
+        transitionEl.classList.add('active');
+        setTimeout(resolve, 600);
+      });
+    }
+    function fadeIn() {
+      return new Promise(function(resolve) {
+        if (!transitionEl) return resolve();
+        transitionEl.classList.remove('active');
+        setTimeout(resolve, 600);
+      });
+    }
+
+    // ── Attract mode ──
+    function showAttract() {
+      var el = document.getElementById('el-attract');
+      if (!el) return;
+      el.style.display = '';
+      requestAnimationFrame(function() { el.style.opacity = '1'; });
+    }
+    function hideAttract() {
+      return new Promise(function(resolve) {
+        var el = document.getElementById('el-attract');
+        if (!el) return resolve();
+        el.style.opacity = '0';
+        setTimeout(function() { el.style.display = 'none'; resolve(); }, 800);
+      });
+    }
+
     // ── Full state reset ──
     function resetAllState() {
       pod3Slot.querySelectorAll('.pod-new').forEach(function(el) { el.remove(); });
@@ -544,6 +714,8 @@ function initCluster(scenarioRunner) {
       clearCtxLabel();
       clearStepHighlight();
       hideChaosLine();
+      hideKrknTerminal();
+      clearTargeting();
       hideHelperPod();
       hideVerifyChecklist();
       hideScorecard();
@@ -582,8 +754,16 @@ function initCluster(scenarioRunner) {
       showVerifyChecklist: showVerifyChecklist, updateVerifyCheck: updateVerifyCheck, hideVerifyChecklist: hideVerifyChecklist,
       showScorecard: showScorecard, hideScorecard: hideScorecard,
       showHelperPod: showHelperPod, updateHelperPod: updateHelperPod, hideHelperPod: hideHelperPod,
+      showKrknTerminal: showKrknTerminal, hideKrknTerminal: hideKrknTerminal,
+      showTargeting: showTargeting, clearTargeting: clearTargeting,
+      fireBlastRing: fireBlastRing,
+      hideLegend: hideLegend, showLegend: showLegend,
+      fadeOut: fadeOut, fadeIn: fadeIn,
+      showOnboarding: showOnboarding, hideOnboarding: hideOnboarding,
+      showAttract: showAttract, hideAttract: hideAttract,
       resetAllState: resetAllState,
-      getCurrentLabel: function() { return currentLabel; }
+      getCurrentLabel: function() { return currentLabel; },
+      pacing: pacing
     };
 
     scenarioRunner(ctx);

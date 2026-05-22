@@ -28,12 +28,20 @@ async function scenarioNetwork(ctx) {
   await ctx.wait(1500);
   t += 1.5;
 
+  // Pre-chaos: Targeting
+  ctx.showTargeting(ctx.wn2, 'Worker Node 2');
+  ctx.addEvent(t, 'Krkn: acquiring target — Worker Node 2', 'orange');
+  await ctx.wait(2000);
+  t += 2.0;
+  ctx.clearTargeting();
+
   // Phase 2 — Chaos Injection
   ctx.setPhase(2, 'Chaos Injection', 'Deploying helper pod on WN2', 'orange', 'krkn');
   ctx.highlightStep(1);
   ctx.enterFocusMode(false);
   ctx.krkn.classList.add('krkn-active');
   ctx.showChaosLine();
+  ctx.showKrknTerminal('krknctl run node-network-filter');
   ctx.addEvent(t, 'Krkn: deploying krkn-helper pod on Worker Node 2', 'orange');
   ctx.fireChaosDot();
   await ctx.wait(1200);

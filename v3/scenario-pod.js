@@ -17,16 +17,23 @@ async function scenarioPod(ctx) {
   ctx.setPhase(1, 'Healthy State', 'All pods serving traffic', 'green', 'k8s');
   ctx.highlightStep(0);
   ctx.addEvent(t, 'Krkn config loaded — pod-delete scenario', 'blue');
-  await ctx.wait(600);
+  await ctx.wait(400);
   ctx.addEvent(t, 'Scenario plugin: pod_scenario_plugin', 'blue');
-  await ctx.wait(600);
+  await ctx.wait(400);
   ctx.addEvent(t, 'Target discovery: frontend-v2-9f2a (Node 2)', 'blue');
-  await ctx.wait(600);
-  t += 1.8;
+  await ctx.wait(400);
+  t += 1.2;
   ctx.addEvent(t, 'All pods healthy, traffic balanced', 'green');
   ctx.updateSLO('100%', '120ms', '0.1%');
+  await ctx.wait(1000);
+  t += 1.0;
+
+  // Pre-chaos: Targeting
+  ctx.showTargeting(ctx.pod3Orig, 'frontend-v2-9f2a');
+  ctx.addEvent(t, 'Krkn: acquiring target — frontend-v2-9f2a', 'orange');
   await ctx.wait(1500);
   t += 1.5;
+  ctx.clearTargeting();
 
   // Phase 2 — Chaos Injection
   ctx.setPhase(2, 'Chaos Injection', 'Krkn targeting frontend-v2-9f2a', 'orange', 'krkn');
@@ -34,15 +41,16 @@ async function scenarioPod(ctx) {
   ctx.enterFocusMode();
   ctx.krkn.classList.add('krkn-active');
   ctx.showChaosLine();
+  ctx.showKrknTerminal('krknctl run pod-scenarios');
   ctx.addEvent(t, 'Krkn: pod-delete targeting frontend-v2-9f2a', 'orange');
   ctx.fireChaosDot();
-  await ctx.wait(1200);
-  t += 1.2;
+  await ctx.wait(800);
+  t += 0.8;
 
   ctx.apiserver.classList.add('cp-highlight');
   ctx.addEvent(t, 'API Server: DELETE pod/frontend-v2-9f2a', 'orange');
-  await ctx.wait(800);
-  t += 0.8;
+  await ctx.wait(600);
+  t += 0.6;
   ctx.apiserver.classList.remove('cp-highlight');
   ctx.krkn.classList.remove('krkn-active');
   ctx.hideChaosLine();
@@ -51,17 +59,18 @@ async function scenarioPod(ctx) {
   ctx.setPhase(3, 'Pod Deleted', 'frontend-v2-9f2a terminating', 'red', 'krkn');
   ctx.highlightStep(2);
   ctx.setPodStatus(ctx.pod3Orig, 'killed');
+  ctx.fireBlastRing(ctx.pod3Orig);
   ctx.showCtxLabel(ctx.pod3Orig, 'Pod Terminating — graceful shutdown', 'red', 'top', -24);
   ctx.addEvent(t, 'frontend-v2-9f2a deleted — graceful shutdown initiated', 'red');
   ctx.updateSLO('99.8%', '180ms', '0.8%');
-  await ctx.wait(1500);
-  t += 1.5;
+  await ctx.wait(1000);
+  t += 1.0;
 
   ctx.pathBDots.forEach(function(d) { d.style.display = 'none'; });
   ctx.addEvent(t, 'Traffic to frontend-v2 endpoint failing', 'red');
   ctx.updateSLO('99.5%', '220ms', '1.2%');
-  await ctx.wait(1000);
-  t += 1.0;
+  await ctx.wait(800);
+  t += 0.8;
 
   // Phase 4 — Drift Detected
   ctx.setPhase(4, 'Drift Detected', 'Controller reconciling', 'blue', 'k8s');
@@ -69,12 +78,12 @@ async function scenarioPod(ctx) {
   ctx.controller.classList.add('cp-reconciling');
   ctx.showCtxLabel(ctx.controller, 'ReplicaSet: desired=2 current=1', 'blue', 'bottom');
   ctx.addEvent(t, 'Controller: replica drift detected', 'blue');
-  await ctx.wait(1500);
-  t += 1.5;
-
-  ctx.addEvent(t, 'ReplicaSet reconciling — scheduling new pod', 'blue');
   await ctx.wait(1000);
   t += 1.0;
+
+  ctx.addEvent(t, 'ReplicaSet reconciling — scheduling new pod', 'blue');
+  await ctx.wait(800);
+  t += 0.8;
 
   // Phase 5 — Traffic Rerouted
   ctx.setPhase(5, 'Traffic Rerouted', 'Endpoint removed from Service', 'blue', 'k8s');
@@ -83,8 +92,8 @@ async function scenarioPod(ctx) {
   ctx.addTrafficBoost();
   ctx.addEvent(t, 'Endpoint removed — frontend-v2-9f2a', 'blue');
   ctx.updateSLO('99.6%', '190ms', '0.9%');
-  await ctx.wait(3000);
-  t += 3.0;
+  await ctx.wait(2000);
+  t += 2.0;
 
   // Phase 6 — Pod Removed
   ctx.setPhase(6, 'Pod Removed', 'Cleaning up failed pod', 'red', 'k8s');
@@ -92,31 +101,43 @@ async function scenarioPod(ctx) {
   ctx.clearCtxLabel();
   ctx.controller.classList.remove('cp-reconciling');
   ctx.addEvent(t, 'Terminated pod removed from node', 'red');
-  await ctx.wait(1500);
-  t += 1.5;
+  await ctx.wait(1000);
+  t += 1.0;
   ctx.pod3Orig.classList.remove('pod-failing');
   ctx.pod3Orig.classList.add('pod-dying');
-  await ctx.wait(800);
-  t += 0.8;
+  await ctx.wait(600);
+  t += 0.6;
   ctx.pod3Orig.style.display = 'none';
   ctx.pod3Orig.classList.remove('pod-dying');
-  await ctx.wait(800);
-  t += 0.8;
+  await ctx.wait(600);
+  t += 0.6;
 
   // Phase 7 — Creating Pod
-  ctx.setPhase(7, 'Creating Pod', 'Replacement pod scheduling', 'blue', 'k8s');
+  ctx.setPhase(7, 'Creating Pod', 'Scheduler selecting node', 'blue', 'k8s');
   ctx.highlightStep(6);
+
+  ctx.scheduler.classList.remove('cp-muted');
+  ctx.scheduler.classList.add('cp-reconciling');
+  ctx.showCtxLabel(ctx.scheduler, 'Selecting optimal node...', 'blue', 'bottom');
+  ctx.addEvent(t, 'Scheduler: evaluating nodes for frontend-v2 replica', 'blue');
+  await ctx.wait(1000);
+  t += 1.0;
+
+  ctx.scheduler.classList.remove('cp-reconciling');
+  ctx.scheduler.classList.add('cp-muted');
+  ctx.clearCtxLabel();
+
   ctx.showCtxLabel(ctx.pod3Slot, 'Scheduling replacement pod...', 'blue', 'top', -24);
   var creatingPod = ctx.createNewPod('creating');
   ctx.pod3Slot.appendChild(creatingPod);
   ctx.addEvent(t, 'New frontend-v2 replica scheduling on Node 2', 'blue');
   ctx.updateSLO('99.7%', '170ms', '0.6%');
-  await ctx.wait(2500);
-  t += 2.5;
+  await ctx.wait(1800);
+  t += 1.8;
 
   ctx.addEvent(t, 'Container images pulled, starting...', 'blue');
-  await ctx.wait(2000);
-  t += 2.0;
+  await ctx.wait(1200);
+  t += 1.2;
 
   creatingPod.remove();
   var readyPod = ctx.createNewPod('ready');
@@ -124,8 +145,8 @@ async function scenarioPod(ctx) {
   ctx.showCtxLabel(ctx.pod3Slot, 'Pod Ready — passing health checks', 'green', 'top', -24);
   ctx.addEvent(t, 'frontend-v2-x4w7 ready — health checks passing', 'green');
   ctx.updateSLO('99.9%', '140ms', '0.2%');
-  await ctx.wait(1500);
-  t += 1.5;
+  await ctx.wait(1000);
+  t += 1.0;
 
   // Phase 8 — Recovery Verification
   ctx.setPhase(8, 'Recovery Verification', 'Validating cluster state', 'blue', 'krkn');
