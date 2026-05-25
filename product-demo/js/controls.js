@@ -13,7 +13,12 @@
     { label: 'Krkn'      },
     { label: 'Demo'      },
     { label: 'Ecosystem' },
-    { label: 'Tools'     },
+    { label: 'Hub'       },
+    { label: 'AI'        },
+    { label: 'CLI'       },
+    { label: 'Operator'  },
+    { label: 'Dashboard' },
+    { label: 'Assist'    },
     { label: 'Start'     },
   ];
 
