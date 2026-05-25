@@ -233,7 +233,7 @@ html, body { background: var(--bg); }
 .s-krkn__github { font-family: var(--mono); font-size: 20px; color: var(--text-sub); opacity: 0; }
 
 /* ═══════════════════════════════════════════════ S4 — ECOSYSTEM MAP */
-#s-ecosystem { padding: 48px 80px; gap: 36px; justify-content: flex-start; }
+#s-ecosystem { padding: 48px 80px; gap: 36px; justify-content: center; }
 
 .s-eco__header { display: flex; flex-direction: column; align-items: center; gap: 8px; flex-shrink: 0; }
 .s-eco__eyebrow { font-family: var(--mono); font-size: 13px; color: var(--text-sub); letter-spacing: .12em; text-transform: uppercase; }
@@ -765,14 +765,17 @@ html, body { background: var(--bg); }
 }
 #krkn-controls.kc-hidden { opacity: 0; transform: translateX(-50%) translateY(16px); pointer-events: none; }
 
-#kc-dots { display: flex; align-items: center; gap: 8px; padding-right: 6px; border-right: 1px solid rgba(255,255,255,.1); }
+#kc-dots { display: flex; align-items: center; gap: 4px; padding-right: 6px; border-right: 1px solid rgba(255,255,255,.1); }
 .kc-dot {
-  width: 9px; height: 9px; border-radius: 50%;
-  background: rgba(255,255,255,.35); cursor: pointer;
-  transition: background .2s, transform .2s; border: none; padding: 0;
+  border-radius: 20px; cursor: pointer;
+  transition: background .2s, color .2s, border-color .2s, transform .15s;
+  border: 1px solid rgba(255,255,255,.08); padding: 4px 10px;
+  background: rgba(255,255,255,.06);
+  font-family: var(--mono); font-size: 10px; font-weight: 600;
+  color: rgba(255,255,255,.45); white-space: nowrap; line-height: 1;
 }
-.kc-dot:hover { background: rgba(255,255,255,.65); transform: scale(1.3); }
-.kc-dot.active { background: var(--red); transform: scale(1.2); box-shadow: 0 0 6px rgba(236,28,36,.5); }
+.kc-dot:hover { background: rgba(255,255,255,.12); color: rgba(255,255,255,.8); border-color: rgba(255,255,255,.2); }
+.kc-dot.active { background: rgba(236,28,36,.15); color: var(--red); border-color: rgba(236,28,36,.3); box-shadow: 0 0 6px rgba(236,28,36,.3); }
 
 #kc-buttons { display: flex; align-items: center; gap: 4px; }
 

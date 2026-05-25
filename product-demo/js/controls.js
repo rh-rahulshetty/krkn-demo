@@ -36,8 +36,11 @@
   var zoomClasses = ['zoom-1', 'zoom-2', 'zoom-3'];
 
   function applyZoom() {
-    document.documentElement.style.setProperty('--ui-zoom', zoomScales[zoomLevel - 1]);
-    document.querySelector('.reveal').style.fontSize = (18 * zoomScales[zoomLevel - 1]) + 'px';
+    var scale = zoomScales[zoomLevel - 1];
+    document.documentElement.style.setProperty('--ui-zoom', scale);
+    if (window.Reveal && Reveal.isReady()) {
+      Reveal.configure({ width: Math.round(1920 / scale), height: Math.round(1080 / scale) });
+    }
     btnZoom.textContent = zoomLabels[zoomLevel - 1];
     zoomClasses.forEach(function(c) { btnZoom.classList.remove(c); });
     btnZoom.classList.add(zoomClasses[zoomLevel - 1]);
@@ -57,6 +60,7 @@
   ACTS.forEach(function(act, i) {
     var d = document.createElement('button');
     d.className = 'kc-dot';
+    d.textContent = act.label;
     d.title = act.label;
     d.addEventListener('click', function() {
       if (window.Reveal) Reveal.slide(i, 0);

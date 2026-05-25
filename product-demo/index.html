@@ -390,32 +390,19 @@
             </ul>
           </div>
           <div class="s-tool__right">
-            <div class="s-ai__pipeline" id="ai-pipeline">
-              <div class="s-ai__stage" id="ai-s1">
-                <div class="s-ai__stage-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#0E58A0" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-                </div>
-                <div class="s-ai__stage-label">Cluster Config<br><small>topology + SLOs</small></div>
+            <div class="s-terminal" id="ai-terminal">
+              <div class="s-terminal__bar">
+                <span class="s-terminal__dot" style="background:#ef4444"></span>
+                <span class="s-terminal__dot" style="background:#f59e0b"></span>
+                <span class="s-terminal__dot" style="background:#22c55e"></span>
+                <span class="s-terminal__title">krkn-ai</span>
               </div>
-              <div class="s-ai__arrow" id="ai-a1">→</div>
-              <div class="s-ai__stage" id="ai-s2">
-                <div class="s-ai__stage-icon s-ai__stage-icon--spin">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v9h-9"/></svg>
-                </div>
-                <div class="s-ai__stage-label">Evolutionary<br><small>Engine evolving…</small></div>
-              </div>
-              <div class="s-ai__arrow" id="ai-a2">→</div>
-              <div class="s-ai__stage" id="ai-s3">
-                <div class="s-ai__stage-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                </div>
-                <div class="s-ai__stage-label">Ranked Results<br><small>by impact score</small></div>
-              </div>
+              <div class="s-terminal__body" id="ai-body"></div>
             </div>
             <div class="s-ai__results" id="ai-results" style="opacity:0">
-              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Impact 82</span></div>
-              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Impact 74</span></div>
-              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Impact 61</span></div>
+              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Fitness 82</span></div>
+              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Fitness 74</span></div>
+              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Fitness 61</span></div>
             </div>
           </div>
         </div>

@@ -141,13 +141,12 @@ function animateOperator(section) {
 /* ── 6d: Krkn AI ──────────────────────────────────────────────── */
 function animateAI(section) {
   var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
-  var stages  = ['#ai-s1','#ai-s2','#ai-s3'];
-  var arrows  = ['#ai-a1','#ai-a2'];
+  var body    = document.getElementById('ai-body');
   var results = document.getElementById('ai-results');
+  if (body) body.innerHTML = '';
 
   gsap.set(['#s-ai .s-tool__eyebrow','#s-ai .s-tool__name','#s-ai .s-tool__desc','#s-ai .s-tool__bullets'], { opacity: 0, x: -24 });
-  gsap.set(stages, { opacity: 0, y: 20 });
-  gsap.set(arrows, { opacity: 0 });
+  gsap.set('#ai-terminal', { opacity: 0, y: 20 });
   if (results) gsap.set(results, { opacity: 0 });
 
   tl
@@ -155,14 +154,25 @@ function animateAI(section) {
     .to('#s-ai .s-tool__name',    { opacity: 1, x: 0, duration: .6 }, '-=.2')
     .to('#s-ai .s-tool__desc',    { opacity: 1, x: 0, duration: .5 }, '-=.1')
     .to('#s-ai .s-tool__bullets', { opacity: 1, x: 0, duration: .5 }, '-=.1')
-    /* Pipeline stages */
-    .to('#ai-s1', { opacity: 1, y: 0, duration: .6 }, '+=.4')
-    .to('#ai-a1', { opacity: 1, duration: .3 })
-    .to('#ai-s2', { opacity: 1, y: 0, duration: .6 })
-    .to('#ai-a2', { opacity: 1, duration: .3 })
-    .to('#ai-s3', { opacity: 1, y: 0, duration: .6 })
-    /* Reveal ranked results */
-    .to(results, { opacity: 1, duration: .8 }, '+=.8');
+    .to('#ai-terminal', { opacity: 1, y: 0, duration: .7 }, '+=.2')
+    .call(function() {
+      if (!body) return;
+      var lines = [
+        { html: '<span class="t-prompt">$</span> <span class="t-cmd">krkn_ai discover -k kubeconfig.yaml \\</span>',          pause: .3 },
+        { html: '<span class="t-output--dim">    -n "robot-shop" -o ./krkn-ai.yaml</span>',                                    pause: .8 },
+        { html: '<span class="t-output t-output--green">✔  Discovered 12 pods, 3 nodes, 5 services</span>',                   pause: .3 },
+        { html: '<span class="t-output t-output--green">✔  Generated krkn-ai.yaml</span>',                                    pause: .8 },
+        { html: '<span class="t-prompt">$</span> <span class="t-cmd">krkn_ai run -c ./krkn-ai.yaml -o ./results/</span>',     pause: .8 },
+        { html: '<span class="t-output t-output--yellow">▶  Generation 1/10 — evolving scenarios…</span>',                    pause: .5 },
+        { html: '<span class="t-output t-output--orange">   pod-scenarios       → fitness: 82</span>',                        pause: .3 },
+        { html: '<span class="t-output t-output--orange">   network-chaos       → fitness: 74</span>',                        pause: .3 },
+        { html: '<span class="t-output t-output--orange">   cpu-hog             → fitness: 61</span>',                        pause: .6 },
+        { html: '<span class="t-output t-output--yellow">▶  Crossover + mutation → generation 2…</span>',                    pause: .5 },
+        { html: '<span class="t-output t-output--green">✔  Evolution complete — 3 critical paths found</span><span class="t-cursor">_</span>', pause: 0 },
+      ];
+      typeInto(body, lines, 0);
+    })
+    .to(results, { opacity: 1, duration: .8 }, '+=3.0');
 
   /* Highlight result rows one by one */
   tl.call(function() {
@@ -177,7 +187,7 @@ function animateAI(section) {
     });
   }, null, '+=.2');
 
-  return { timeline: tl };
+  return { timeline: tl, cleanup: function() { if (body) body.innerHTML = ''; } };
 }
 
 /* ── 6e: Krkn Dashboard ───────────────────────────────────────── */
