@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Krkn — Chaos Engineering for Kubernetes</title>
+  <link rel="stylesheet" href="css/reveal.css">
+  <link rel="stylesheet" href="css/custom.css">
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════════ REVEAL -->
+<div class="reveal">
+  <div class="slides">
+
+    <!-- ── S1: HOOK ──────────────────────────────────────── 35s -->
+    <section id="s-hook" data-autoslide="35000">
+      <div class="s-hook__time">02:47 AM — Production</div>
+      <div class="s-hook__terminal">
+        <div class="s-hook__bar">
+          <span class="s-hook__bar-dot" style="background:#ef4444"></span>
+          <span class="s-hook__bar-dot" style="background:#f59e0b"></span>
+          <span class="s-hook__bar-dot" style="background:#22c55e"></span>
+          <span class="s-hook__bar-title">alerts — production cluster</span>
+        </div>
+        <div class="s-hook__log-lines">
+          <div class="s-hook__line" id="hl1">
+            <span class="hl-ts">02:47:13</span>
+            <span class="hl-sev hl-alert">ALERT</span>
+            <span class="hl-svc">frontend-deployment</span>
+            <span class="hl-msg">replicas: 0/3 &mdash; all pods down</span>
+          </div>
+          <div class="s-hook__line" id="hl2">
+            <span class="hl-ts">02:47:14</span>
+            <span class="hl-sev hl-error">ERROR</span>
+            <span class="hl-svc">pod/frontend-7d4b</span>
+            <span class="hl-msg">liveness probe failing — OOMKilled</span>
+          </div>
+          <div class="s-hook__line" id="hl3">
+            <span class="hl-ts">02:47:15</span>
+            <span class="hl-sev hl-critical">CRITICAL</span>
+            <span class="hl-svc">SLO breach</span>
+            <span class="hl-msg">availability 94.2% &mdash; threshold 99.9%</span>
+          </div>
+          <div class="s-hook__line" id="hl4">
+            <span class="hl-ts">02:47:16</span>
+            <span class="hl-sev hl-page">PAGE</span>
+            <span class="hl-svc">PagerDuty</span>
+            <span class="hl-msg">3 engineers woken up — incident declared</span>
+          </div>
+          <div class="s-hook__line s-hook__line--cursor" id="hl5">
+            <span class="hl-ts">02:47:31</span>
+            <span class="hl-sev hl-info">INFO</span>
+            <span class="hl-svc">postmortem-bot</span>
+            <span class="hl-msg">root cause: untested failure mode — <span class="hl-blink">_</span></span>
+          </div>
+        </div>
+      </div>
+      <div class="s-hook__question" id="hook-question">
+        What if you found the weakness<br>before your users did?
+      </div>
+      <div class="s-hook__answer" id="hook-answer">
+        Chaos engineering lets you break things intentionally — on your terms.
+      </div>
+    </section>
+
+    <!-- ── S2: WHY CHAOS ENGINEERING ─────────────────────── 40s -->
+    <section id="s-chaos" data-autoslide="40000">
+      <div class="s-chaos__header">
+        <div class="s-chaos__eyebrow">The discipline behind</div>
+        <h2 class="s-chaos__title">Chaos Engineering</h2>
+        <p class="s-chaos__sub">Deliberately inject failures in controlled conditions to validate resilience before incidents do.</p>
+      </div>
+      <div class="s-chaos__cycle">
+        <div class="s-chaos__step" id="cs1" data-color="blue">
+          <div class="s-chaos__step-num">01</div>
+          <div class="s-chaos__step-icon">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="16" cy="16" r="12"/><path d="M16 10v6l4 3"/></svg>
+          </div>
+          <div class="s-chaos__step-label">Hypothesize</div>
+          <div class="s-chaos__step-desc">Define expected system behavior under a specific failure condition</div>
+        </div>
+        <div class="s-chaos__arrow" id="ca1">
+          <svg viewBox="0 0 60 20" fill="none"><path d="M0 10 L52 10" stroke="currentColor" stroke-width="2" stroke-dasharray="5 3"/><polygon points="50,5 60,10 50,15" fill="currentColor"/></svg>
+        </div>
+        <div class="s-chaos__step" id="cs2" data-color="red">
+          <div class="s-chaos__step-num">02</div>
+          <div class="s-chaos__step-icon">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M16 4 L28 28 L4 28 Z"/><line x1="16" y1="14" x2="16" y2="20"/><circle cx="16" cy="24" r="1" fill="currentColor"/></svg>
+          </div>
+          <div class="s-chaos__step-label">Inject</div>
+          <div class="s-chaos__step-desc">Introduce real failure — pod deletion, network partition, resource exhaustion</div>
+        </div>
+        <div class="s-chaos__arrow" id="ca2">
+          <svg viewBox="0 0 60 20" fill="none"><path d="M0 10 L52 10" stroke="currentColor" stroke-width="2" stroke-dasharray="5 3"/><polygon points="50,5 60,10 50,15" fill="currentColor"/></svg>
+        </div>
+        <div class="s-chaos__step" id="cs3" data-color="amber">
+          <div class="s-chaos__step-num">03</div>
+          <div class="s-chaos__step-icon">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="4,20 10,12 16,16 22,8 28,14"/><line x1="4" y1="26" x2="28" y2="26"/></svg>
+          </div>
+          <div class="s-chaos__step-label">Observe</div>
+          <div class="s-chaos__step-desc">Measure SLOs, recovery time, error rates — compare against the hypothesis</div>
+        </div>
+        <div class="s-chaos__arrow" id="ca3">
+          <svg viewBox="0 0 60 20" fill="none"><path d="M0 10 L52 10" stroke="currentColor" stroke-width="2" stroke-dasharray="5 3"/><polygon points="50,5 60,10 50,15" fill="currentColor"/></svg>
+        </div>
+        <div class="s-chaos__step" id="cs4" data-color="green">
+          <div class="s-chaos__step-num">04</div>
+          <div class="s-chaos__step-icon">
+            <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M6 16 L13 23 L26 9"/></svg>
+          </div>
+          <div class="s-chaos__step-label">Improve</div>
+          <div class="s-chaos__step-desc">Fix weaknesses found. Raise the bar. Repeat with higher confidence.</div>
+        </div>
+      </div>
+      <div class="s-chaos__tagline" id="chaos-tagline">
+        Used by Netflix, Google, Amazon — and now Kubernetes teams everywhere.
+      </div>
+    </section>
+
+    <!-- ── S3: MEET KRKN ──────────────────────────────────── 30s -->
+    <section id="s-krkn" data-autoslide="30000">
+      <div class="s-krkn__layout">
+        <div class="s-krkn__logo-wrap" id="krkn-logo-wrap">
+          <img src="img/krkn-logo.svg" alt="Krkn" class="s-krkn__logo">
+        </div>
+        <div class="s-krkn__text">
+          <div class="s-krkn__eyebrow" id="krkn-eyebrow">Open Source · CNCF Sandbox</div>
+          <h1 class="s-krkn__name" id="krkn-name">Krkn</h1>
+          <p class="s-krkn__tagline" id="krkn-tagline">Chaos Engineering for Kubernetes</p>
+          <p class="s-krkn__desc" id="krkn-desc">
+            An open-source framework for injecting controlled chaos into Kubernetes and OpenShift clusters — validating resilience through SLOs and producing actionable resiliency scores.
+          </p>
+          <div class="s-krkn__badges" id="krkn-badges">
+            <span class="s-krkn__badge s-krkn__badge--cncf">
+              <img src="img/cncf-white.svg" alt="CNCF" style="height:18px;vertical-align:middle;margin-right:6px;">
+              CNCF Sandbox
+            </span>
+            <span class="s-krkn__badge s-krkn__badge--scenarios">20+ Scenarios</span>
+            <span class="s-krkn__badge s-krkn__badge--oss">Open Source</span>
+            <span class="s-krkn__badge s-krkn__badge--k8s">Kubernetes Native</span>
+          </div>
+          <div class="s-krkn__github" id="krkn-github">github.com/krkn-chaos</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── S4: ECOSYSTEM MAP ──────────────────────────────── 50s -->
+    <section id="s-ecosystem" data-autoslide="50000">
+      <div class="s-eco__header">
+        <div class="s-eco__eyebrow">The complete toolkit</div>
+        <h2 class="s-eco__title">The Krkn Ecosystem</h2>
+      </div>
+      <div class="s-eco__map">
+        <!-- Center hub -->
+        <div class="s-eco__hub" id="eco-hub">
+          <div class="s-eco__hub-ring"></div>
+          <img src="img/krkn-logo.svg" alt="Krkn" class="s-eco__hub-logo">
+          <span class="s-eco__hub-label">Krkn</span>
+        </div>
+
+        <!-- Tool cards -->
+        <div class="s-eco__card s-eco__card--tl" id="eco-hub-card">
+          <div class="s-eco__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+          </div>
+          <div class="s-eco__card-body">
+            <div class="s-eco__card-name">krkn-hub</div>
+            <div class="s-eco__card-desc">Ready-to-run container images for every scenario</div>
+          </div>
+        </div>
+
+        <div class="s-eco__card s-eco__card--tr" id="eco-krknctl-card">
+          <div class="s-eco__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg>
+          </div>
+          <div class="s-eco__card-body">
+            <div class="s-eco__card-name">krknctl</div>
+            <div class="s-eco__card-desc">CLI to discover and run chaos scenarios in one command</div>
+          </div>
+        </div>
+
+        <div class="s-eco__card s-eco__card--ml" id="eco-operator-card">
+          <div class="s-eco__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
+          </div>
+          <div class="s-eco__card-body">
+            <div class="s-eco__card-name">Krkn Operator</div>
+            <div class="s-eco__card-desc">Cloud-native, declarative chaos orchestration via CRDs</div>
+          </div>
+        </div>
+
+        <div class="s-eco__card s-eco__card--mr" id="eco-ai-card">
+          <div class="s-eco__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 3H5a2 2 0 0 0-2 2v4m6-6h10a2 2 0 0 1 2 2v4M9 3v18m0 0h10a2 2 0 0 0 2-2v-4M9 21H5a2 2 0 0 1-2-2v-4m0 0h18"/></svg>
+          </div>
+          <div class="s-eco__card-body">
+            <div class="s-eco__card-name">Krkn AI</div>
+            <div class="s-eco__card-desc">Evolutionary algorithms auto-discover critical failure modes</div>
+          </div>
+        </div>
+
+        <div class="s-eco__card s-eco__card--bl" id="eco-dashboard-card">
+          <div class="s-eco__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="3" y="3" width="7" height="9" rx="1"/><rect x="14" y="3" width="7" height="5" rx="1"/><rect x="14" y="12" width="7" height="9" rx="1"/><rect x="3" y="16" width="7" height="5" rx="1"/></svg>
+          </div>
+          <div class="s-eco__card-body">
+            <div class="s-eco__card-name">Krkn Dashboard</div>
+            <div class="s-eco__card-desc">Browser UI to run, monitor and replay chaos experiments</div>
+          </div>
+        </div>
+
+        <div class="s-eco__card s-eco__card--br" id="eco-assist-card">
+          <div class="s-eco__card-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <div class="s-eco__card-body">
+            <div class="s-eco__card-name">Krkn Assist</div>
+            <div class="s-eco__card-desc">AI-powered CLI assistant guides scenario selection and setup</div>
+          </div>
+        </div>
+
+        <!-- SVG connector lines -->
+        <svg class="s-eco__lines" id="eco-lines" viewBox="0 0 1400 560" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Lines drawn by s4-ecosystem.js -->
+        </svg>
+      </div>
+    </section>
+
+    <!-- ── S5: LIVE DEMO ──────────────────────────────────── 110s -->
+    <section id="s-demo" data-autoslide="110000">
+      <div class="s-demo__header">
+        <div class="s-demo__eyebrow">Watch it happen</div>
+        <h2 class="s-demo__title">Krkn in Action — Pod Failure Scenario</h2>
+      </div>
+
+      <!-- Cluster visualization (ported from v3) -->
+      <div class="s-demo__wrapper" id="demo-wrapper">
+        <div class="cluster" id="demo-cluster">
+          <svg id="demo-svg-layer" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <marker id="d-arr-r" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0.5,6 2.5,0 4.5" fill="#EC1C24"/></marker>
+              <marker id="d-arr-o" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0.5,6 2.5,0 4.5" fill="#f97316"/></marker>
+              <filter id="d-chaos-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+            </defs>
+          </svg>
+
+          <div class="cluster-content">
+            <div class="cluster-boundary">
+              <!-- Phase bar -->
+              <div class="phase-bar">
+                <div class="phase-number" id="d-phase-num">&mdash;</div>
+                <div>
+                  <div class="phase-title" id="d-phase-title">Initializing</div>
+                  <div class="phase-subtitle" id="d-phase-subtitle"></div>
+                </div>
+              </div>
+
+              <!-- Traffic row -->
+              <div class="traffic-row">
+                <div class="users-block" id="d-users">
+                  <div class="user-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                  </div>
+                  <span class="users-label">Users</span>
+                </div>
+                <div class="flow-connector">
+                  <svg viewBox="0 0 56 14" fill="none"><line x1="0" y1="7" x2="46" y2="7" stroke="#EC1C24" stroke-width="1.5"/><polygon points="46,2.5 55,7 46,11.5" fill="#EC1C24"/></svg>
+                </div>
+                <div class="arch-card" id="d-ingress">
+                  <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
+                  <span class="card-text">Ingress</span>
+                </div>
+                <div class="flow-connector">
+                  <svg viewBox="0 0 56 14" fill="none"><line x1="0" y1="7" x2="46" y2="7" stroke="#EC1C24" stroke-width="1.5"/><polygon points="46,2.5 55,7 46,11.5" fill="#EC1C24"/></svg>
+                </div>
+                <div class="arch-card" id="d-service">
+                  <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg></div>
+                  <span class="card-text">Service</span>
+                </div>
+              </div>
+
+              <!-- Worker nodes -->
+              <div class="nodes-row">
+                <div class="worker-node" id="d-wn1">
+                  <div class="node-title">Worker Node 1</div>
+                  <div class="node-services">
+                    <span class="svc-badge">kubelet</span>
+                    <span class="svc-badge">kube-proxy</span>
+                    <span class="svc-badge">container runtime</span>
+                  </div>
+                  <div class="pods-row">
+                    <div class="pod-card" id="d-pod1">
+                      <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
+                      <div class="pod-label"><span><span class="pod-friendly-name">Frontend App</span><span class="pod-k8s-name">frontend-v2-7d4b</span></span></div>
+                      <div class="containers-grid"><span class="ctr-chip">react-app</span><span class="ctr-chip">nginx</span></div>
+                    </div>
+                    <div class="pod-card" id="d-pod2">
+                      <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
+                      <div class="pod-label"><span><span class="pod-friendly-name">Order Service</span><span class="pod-k8s-name">order-svc-3k8m</span></span></div>
+                      <div class="containers-grid"><span class="ctr-chip">order-api</span><span class="ctr-chip">envoy</span></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="worker-node" id="d-wn2">
+                  <div class="node-title">Worker Node 2</div>
+                  <div class="node-services">
+                    <span class="svc-badge">kubelet</span>
+                    <span class="svc-badge">kube-proxy</span>
+                    <span class="svc-badge">container runtime</span>
+                  </div>
+                  <div class="pods-row">
+                    <div class="pod-slot" id="d-pod3-slot">
+                      <div class="pod-card" id="d-pod3">
+                        <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
+                        <div class="fail-x" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></div>
+                        <div class="pod-label"><span><span class="pod-friendly-name">Frontend App</span><span class="pod-k8s-name">frontend-v2-9f2a</span></span></div>
+                        <div class="containers-grid"><span class="ctr-chip">react-app</span><span class="ctr-chip">nginx</span></div>
+                      </div>
+                    </div>
+                    <div class="pod-card" id="d-pod4">
+                      <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
+                      <div class="pod-label"><span><span class="pod-friendly-name">Order Service</span><span class="pod-k8s-name">order-svc-5n1p</span></span></div>
+                      <div class="containers-grid"><span class="ctr-chip">order-api</span><span class="ctr-chip">envoy</span></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Control plane -->
+              <div class="cp-row">
+                <div class="control-plane" id="d-cp">
+                  <div class="cp-title">Control Plane</div>
+                  <div class="cp-grid">
+                    <div class="cp-item cp-muted" id="d-etcd">
+                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
+                      <span class="cp-name">Cluster Memory</span><span class="cp-desc">etcd</span>
+                    </div>
+                    <div class="cp-item" id="d-apiserver">
+                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1" fill="#EC1C24"/><circle cx="6" cy="18" r="1" fill="#EC1C24"/></svg></div>
+                      <span class="cp-name">API Gateway</span><span class="cp-desc">kube-apiserver</span>
+                    </div>
+                    <div class="cp-item cp-muted" id="d-scheduler">
+                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+                      <span class="cp-name">Pod Scheduler</span><span class="cp-desc">kube-scheduler</span>
+                    </div>
+                    <div class="cp-item" id="d-controller">
+                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
+                      <span class="cp-name">Self-Healer</span><span class="cp-desc">kube-controller-manager</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- /cluster-boundary -->
+
+            <!-- Krkn external -->
+            <div class="krkn-external">
+              <div class="krkn-ext-badge">External</div>
+              <div class="krkn-card" id="d-krkn">
+                <img src="img/krkn-logo.svg" alt="Krkn" class="krkn-card-logo">
+                <span class="krkn-title">Krkn</span>
+                <span class="krkn-subtitle">Chaos Engine</span>
+                <div class="krkn-cmd" id="d-krkn-cmd" style="display:none"></div>
+              </div>
+              <div class="slo-section">
+                <div class="slo-title">SLO Monitor</div>
+                <div class="slo-metrics">
+                  <div class="slo-row"><span class="slo-label">Availability</span><span class="slo-value slo-healthy" id="d-slo-avail">100%</span></div>
+                  <div class="slo-row"><span class="slo-label">p95 Latency</span><span class="slo-value slo-healthy" id="d-slo-latency">120ms</span></div>
+                  <div class="slo-row"><span class="slo-label">Error Rate</span><span class="slo-value slo-healthy" id="d-slo-error">0.1%</span></div>
+                </div>
+              </div>
+            </div>
+          </div><!-- /cluster-content -->
+
+          <!-- Lifecycle bar -->
+          <div class="lifecycle-section" id="d-lifecycle" style="display:none">
+            <div class="lifecycle-title" id="d-lifecycle-title"></div>
+            <div class="lifecycle-flow" id="d-lifecycle-flow"></div>
+          </div>
+
+          <!-- Overlays -->
+          <div class="scene-overlay" id="d-scene-overlay" style="display:none">
+            <div class="scene-card">
+              <div class="scene-title" id="d-scene-title"></div>
+              <div class="scene-subtitle" id="d-scene-sub"></div>
+            </div>
+          </div>
+          <div class="verify-overlay" id="d-verify" style="display:none"></div>
+          <div class="scorecard-overlay" id="d-scorecard" style="display:none"></div>
+          <div class="transition-overlay" id="d-transition"></div>
+        </div><!-- /demo-cluster -->
+      </div><!-- /demo-wrapper -->
+    </section>
+
+    <!-- ── S6: TOOL TOUR (vertical sub-slides) ───────────── 20s each -->
+    <section>
+
+      <!-- 6a: krkn-hub -->
+      <section id="s-hub" data-autoslide="22000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Scenario Library</div>
+            <h2 class="s-tool__name">krkn-hub</h2>
+            <p class="s-tool__desc">Every chaos scenario packaged as a ready-to-run container image, configurable entirely through environment variables.</p>
+            <ul class="s-tool__bullets">
+              <li>20+ pre-built scenario images on quay.io</li>
+              <li>Runs with Docker, Podman, or Kubernetes</li>
+              <li>Each image is self-contained with all dependencies</li>
+              <li>Config via env vars — no YAML authoring needed</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-hub__grid" id="hub-grid">
+              <div class="hub-card" data-delay="0">pod-scenarios</div>
+              <div class="hub-card" data-delay="1">node-scenarios</div>
+              <div class="hub-card" data-delay="2">network-chaos</div>
+              <div class="hub-card" data-delay="3">cpu-hog</div>
+              <div class="hub-card" data-delay="4">memory-hog</div>
+              <div class="hub-card" data-delay="5">io-hog</div>
+              <div class="hub-card" data-delay="6">pvc-scenarios</div>
+              <div class="hub-card" data-delay="7">time-scenarios</div>
+              <div class="hub-card" data-delay="8">dns-outage</div>
+              <div class="hub-card" data-delay="9">zone-outage</div>
+              <div class="hub-card" data-delay="10">syn-flood</div>
+              <div class="hub-card" data-delay="11">etcd-split-brain</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6b: krknctl -->
+      <section id="s-krknctl" data-autoslide="22000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Command-Line Interface</div>
+            <h2 class="s-tool__name">krknctl</h2>
+            <p class="s-tool__desc">A developer-friendly CLI that wraps krkn-hub scenarios — providing auto-completion, validation, and structured output without touching containers directly.</p>
+            <ul class="s-tool__bullets">
+              <li>Shell auto-completion out of the box</li>
+              <li>Input validation before scenario runs</li>
+              <li>Structured JSON/YAML output for CI pipelines</li>
+              <li>Graphs scenario dependencies and execution order</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-terminal" id="krknctl-terminal">
+              <div class="s-terminal__bar">
+                <span class="s-terminal__dot" style="background:#ef4444"></span>
+                <span class="s-terminal__dot" style="background:#f59e0b"></span>
+                <span class="s-terminal__dot" style="background:#22c55e"></span>
+                <span class="s-terminal__title">terminal</span>
+              </div>
+              <div class="s-terminal__body" id="krknctl-body"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6c: Operator -->
+      <section id="s-operator" data-autoslide="22000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Kubernetes Native</div>
+            <h2 class="s-tool__name">Krkn Operator</h2>
+            <p class="s-tool__desc">A Kubernetes Operator that orchestrates chaos via Custom Resource Definitions — cloud-native, declarative, and designed for multi-cluster environments.</p>
+            <ul class="s-tool__bullets">
+              <li>Declarative chaos via CRDs — no CLI needed</li>
+              <li>Target cluster credentials never shared with users</li>
+              <li>Control plane and target cluster are separate</li>
+              <li>Native Kubernetes RBAC for access control</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-terminal" id="operator-terminal">
+              <div class="s-terminal__bar">
+                <span class="s-terminal__dot" style="background:#ef4444"></span>
+                <span class="s-terminal__dot" style="background:#f59e0b"></span>
+                <span class="s-terminal__dot" style="background:#22c55e"></span>
+                <span class="s-terminal__title">chaos-scenario.yaml</span>
+              </div>
+              <div class="s-terminal__body" id="operator-body"></div>
+            </div>
+            <div class="s-operator__badge" id="operator-badge" style="opacity:0">
+              <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#1a2e1a" stroke="#22c55e" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/></svg>
+              Reconciled by Kubernetes
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6d: Krkn AI -->
+      <section id="s-ai" data-autoslide="24000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Intelligent Automation</div>
+            <h2 class="s-tool__name">Krkn AI</h2>
+            <p class="s-tool__desc">Uses evolutionary algorithms guided by your SLOs and health checks to automatically discover and rank the most impactful chaos experiments for your cluster.</p>
+            <ul class="s-tool__bullets">
+              <li>Generates experiments from cluster topology</li>
+              <li>Guided by real SLOs — not random failures</li>
+              <li>Ranks scenarios by resilience impact score</li>
+              <li>Surfaces previously unknown failure modes</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-ai__pipeline" id="ai-pipeline">
+              <div class="s-ai__stage" id="ai-s1">
+                <div class="s-ai__stage-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#0E58A0" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                </div>
+                <div class="s-ai__stage-label">Cluster Config<br><small>components + SLOs</small></div>
+              </div>
+              <div class="s-ai__arrow" id="ai-a1">→</div>
+              <div class="s-ai__stage" id="ai-s2">
+                <div class="s-ai__stage-icon s-ai__stage-icon--spin">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v9h-9"/></svg>
+                </div>
+                <div class="s-ai__stage-label">Evolutionary<br><small>Engine evolving…</small></div>
+              </div>
+              <div class="s-ai__arrow" id="ai-a2">→</div>
+              <div class="s-ai__stage" id="ai-s3">
+                <div class="s-ai__stage-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="s-ai__stage-label">Ranked Results<br><small>by impact score</small></div>
+              </div>
+            </div>
+            <div class="s-ai__results" id="ai-results" style="opacity:0">
+              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Score 82</span></div>
+              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Score 74</span></div>
+              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Score 61</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6e: Dashboard -->
+      <section id="s-dashboard" data-autoslide="22000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Visual Control Center</div>
+            <h2 class="s-tool__name">Krkn Dashboard</h2>
+            <p class="s-tool__desc">A browser-based UI sitting on top of krkn-hub — run scenarios, watch live output, and replay or compare past experiments without touching the CLI.</p>
+            <ul class="s-tool__bullets">
+              <li>Pick scenarios from a UI — no command memorization</li>
+              <li>Live output streaming as runs execute</li>
+              <li>Save and replay past experiments</li>
+              <li>Elasticsearch + Grafana integration for history</li>
+            </ul>
+          </div>
+          <div class="s-tool__right s-dashboard__right">
+            <img src="img/dashboard-run.png" alt="Krkn Dashboard" class="s-dashboard__img" id="dashboard-img">
+          </div>
+        </div>
+      </section>
+
+      <!-- 6f: Krkn Assist -->
+      <section id="s-assist" data-autoslide="22000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">AI-Powered Assistant</div>
+            <h2 class="s-tool__name">Krkn Assist</h2>
+            <p class="s-tool__desc">A conversational CLI assistant that wraps krknctl — guiding you through scenario selection, configuration and execution through natural language interaction.</p>
+            <ul class="s-tool__bullets">
+              <li>Describe your goal — it picks the right scenario</li>
+              <li>Walks you through config interactively</li>
+              <li>No manual YAML editing or flag memorization</li>
+              <li>Lowers the barrier for teams new to chaos engineering</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-terminal" id="assist-terminal">
+              <div class="s-terminal__bar">
+                <span class="s-terminal__dot" style="background:#ef4444"></span>
+                <span class="s-terminal__dot" style="background:#f59e0b"></span>
+                <span class="s-terminal__dot" style="background:#22c55e"></span>
+                <span class="s-terminal__title">krknctl-assist</span>
+              </div>
+              <div class="s-terminal__body" id="assist-body"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </section><!-- /tool tour vertical group -->
+
+    <!-- ── S7: CTA ──────────────────────────────────────── 35s -->
+    <section id="s-cta" data-autoslide="35000">
+      <div class="s-cta__layout">
+        <div class="s-cta__left">
+          <div class="s-cta__eyebrow">Build confidence in your infrastructure</div>
+          <h2 class="s-cta__title">Don't wait for<br><span class="s-cta__title--accent">2 AM</span> to find<br>your weaknesses.</h2>
+          <p class="s-cta__sub">Start breaking things intentionally — on your terms.</p>
+          <div class="s-cta__links">
+            <div class="s-cta__link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+              krkn-chaos.dev
+            </div>
+            <div class="s-cta__link">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+              github.com/krkn-chaos
+            </div>
+          </div>
+          <img src="img/cncf-white.svg" alt="CNCF Sandbox" class="s-cta__cncf" id="cta-cncf">
+        </div>
+        <div class="s-cta__right">
+          <div class="s-cta__score-wrap" id="cta-score-wrap">
+            <div class="s-cta__score-label">Resiliency Score</div>
+            <div class="s-cta__score-ring" id="cta-score-ring">
+              <svg viewBox="0 0 200 200" class="s-cta__score-svg">
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#1e293b" stroke-width="12"/>
+                <circle cx="100" cy="100" r="80" fill="none" stroke="#EC1C24" stroke-width="12"
+                  stroke-dasharray="502" stroke-dashoffset="502"
+                  stroke-linecap="round" transform="rotate(-90 100 100)"
+                  id="cta-score-arc"/>
+              </svg>
+              <div class="s-cta__score-num" id="cta-score-num">0</div>
+            </div>
+            <div class="s-cta__score-sub">out of 100</div>
+          </div>
+          <div class="s-cta__qr-wrap" id="cta-qr-wrap">
+            <div id="cta-qr-canvas" class="s-cta__qr"></div>
+            <div class="s-cta__qr-label">Scan to get started</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </div><!-- /slides -->
+</div><!-- /reveal -->
+
+<!-- ═══════════════════════════════════════════════════════════ CONTROLS -->
+<div id="krkn-controls">
+  <div id="kc-dots"></div>
+  <div id="kc-buttons">
+    <button id="kc-prev" title="Previous act">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <button id="kc-playpause" title="Play / Pause">
+      <svg class="kc-icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+      <svg class="kc-icon-play" viewBox="0 0 24 24" fill="currentColor" style="display:none"><polygon points="5,3 19,12 5,21"/></svg>
+    </button>
+    <button id="kc-next" title="Next act">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </div>
+  <button id="kc-fullscreen" title="Fullscreen">
+    <svg class="kc-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    <svg class="kc-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+  </button>
+</div>
+
+<!-- Scripts -->
+<script src="js/reveal.js"></script>
+<script src="js/gsap.min.js"></script>
+<script src="js/slides/s1-hook.js"></script>
+<script src="js/slides/s2-chaos.js"></script>
+<script src="js/slides/s3-krkn.js"></script>
+<script src="js/slides/s4-ecosystem.js"></script>
+<script src="js/slides/s5-demo.js"></script>
+<script src="js/slides/s6-tools.js"></script>
+<script src="js/slides/s7-cta.js"></script>
+<script src="js/controls.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>
