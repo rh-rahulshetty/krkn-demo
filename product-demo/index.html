@@ -13,46 +13,67 @@
 <div class="reveal">
   <div class="slides">
 
-    <!-- ── S1: HOOK ──────────────────────────────────────── 35s -->
-    <section id="s-hook" data-autoslide="35000">
-      <div class="s-hook__time">02:47 AM — Production</div>
-      <div class="s-hook__terminal">
-        <div class="s-hook__bar">
-          <span class="s-hook__bar-dot" style="background:#ef4444"></span>
-          <span class="s-hook__bar-dot" style="background:#f59e0b"></span>
-          <span class="s-hook__bar-dot" style="background:#22c55e"></span>
-          <span class="s-hook__bar-title">alerts — production cluster</span>
-        </div>
-        <div class="s-hook__log-lines">
-          <div class="s-hook__line" id="hl1">
-            <span class="hl-ts">02:47:13</span>
+    <!-- ── S1: HOOK ──────────────────────────────────────── 20s -->
+    <section id="s-hook" data-autoslide="20000">
+      <div class="s-hook__time">02:47 AM — Production Cluster</div>
+      <div class="s-hook__timeline">
+        <div class="s-hook__tl-event" id="hte1">
+          <div class="s-hook__tl-ts">02:47:13</div>
+          <div class="s-hook__tl-mid">
+            <div class="s-hook__tl-dot hte-alert"></div>
+            <div class="s-hook__tl-line" id="htl1"></div>
+          </div>
+          <div class="s-hook__tl-body">
             <span class="hl-sev hl-alert">ALERT</span>
-            <span class="hl-svc">frontend-deployment</span>
-            <span class="hl-msg">replicas: 0/3 &mdash; all pods down</span>
+            <span class="s-hook__tl-svc">frontend-deployment</span>
+            <span class="s-hook__tl-msg">replicas: 0/3 &mdash; all pods down</span>
           </div>
-          <div class="s-hook__line" id="hl2">
-            <span class="hl-ts">02:47:14</span>
+        </div>
+        <div class="s-hook__tl-event" id="hte2">
+          <div class="s-hook__tl-ts">02:47:14</div>
+          <div class="s-hook__tl-mid">
+            <div class="s-hook__tl-dot hte-error"></div>
+            <div class="s-hook__tl-line" id="htl2"></div>
+          </div>
+          <div class="s-hook__tl-body">
             <span class="hl-sev hl-error">ERROR</span>
-            <span class="hl-svc">pod/frontend-7d4b</span>
-            <span class="hl-msg">liveness probe failing — OOMKilled</span>
+            <span class="s-hook__tl-svc">pod/frontend-7d4b</span>
+            <span class="s-hook__tl-msg">liveness probe failing &mdash; OOMKilled</span>
           </div>
-          <div class="s-hook__line" id="hl3">
-            <span class="hl-ts">02:47:15</span>
+        </div>
+        <div class="s-hook__tl-event" id="hte3">
+          <div class="s-hook__tl-ts">02:47:15</div>
+          <div class="s-hook__tl-mid">
+            <div class="s-hook__tl-dot hte-crit"></div>
+            <div class="s-hook__tl-line" id="htl3"></div>
+          </div>
+          <div class="s-hook__tl-body">
             <span class="hl-sev hl-critical">CRITICAL</span>
-            <span class="hl-svc">SLO breach</span>
-            <span class="hl-msg">availability 94.2% &mdash; threshold 99.9%</span>
+            <span class="s-hook__tl-svc">SLO breach</span>
+            <span class="s-hook__tl-msg">availability 94.2% &mdash; threshold 99.9%</span>
           </div>
-          <div class="s-hook__line" id="hl4">
-            <span class="hl-ts">02:47:16</span>
+        </div>
+        <div class="s-hook__tl-event" id="hte4">
+          <div class="s-hook__tl-ts">02:47:16</div>
+          <div class="s-hook__tl-mid">
+            <div class="s-hook__tl-dot hte-page"></div>
+            <div class="s-hook__tl-line" id="htl4"></div>
+          </div>
+          <div class="s-hook__tl-body">
             <span class="hl-sev hl-page">PAGE</span>
-            <span class="hl-svc">PagerDuty</span>
-            <span class="hl-msg">3 engineers woken up — incident declared</span>
+            <span class="s-hook__tl-svc">PagerDuty</span>
+            <span class="s-hook__tl-msg">3 engineers paged &mdash; incident declared</span>
           </div>
-          <div class="s-hook__line s-hook__line--cursor" id="hl5">
-            <span class="hl-ts">02:47:31</span>
+        </div>
+        <div class="s-hook__tl-event" id="hte5">
+          <div class="s-hook__tl-ts">02:47:31</div>
+          <div class="s-hook__tl-mid">
+            <div class="s-hook__tl-dot hte-info"></div>
+          </div>
+          <div class="s-hook__tl-body">
             <span class="hl-sev hl-info">INFO</span>
-            <span class="hl-svc">postmortem-bot</span>
-            <span class="hl-msg">root cause: untested failure mode — <span class="hl-blink">_</span></span>
+            <span class="s-hook__tl-svc">postmortem-bot</span>
+            <span class="s-hook__tl-msg">root cause: untested failure mode &mdash; <span class="hl-blink">_</span></span>
           </div>
         </div>
       </div>
@@ -64,8 +85,8 @@
       </div>
     </section>
 
-    <!-- ── S2: WHY CHAOS ENGINEERING ─────────────────────── 40s -->
-    <section id="s-chaos" data-autoslide="40000">
+    <!-- ── S2: WHY CHAOS ENGINEERING ─────────────────────── 25s -->
+    <section id="s-chaos" data-autoslide="25000">
       <div class="s-chaos__header">
         <div class="s-chaos__eyebrow">The discipline behind</div>
         <h2 class="s-chaos__title">Chaos Engineering</h2>
@@ -115,12 +136,12 @@
         </div>
       </div>
       <div class="s-chaos__tagline" id="chaos-tagline">
-        Used by Netflix, Google, Amazon — and now Kubernetes teams everywhere.
+        Practiced by platform teams running mission-critical Kubernetes infrastructure worldwide.
       </div>
     </section>
 
-    <!-- ── S3: MEET KRKN ──────────────────────────────────── 30s -->
-    <section id="s-krkn" data-autoslide="30000">
+    <!-- ── S3: MEET KRKN ──────────────────────────────────── 18s -->
+    <section id="s-krkn" data-autoslide="18000">
       <div class="s-krkn__layout">
         <div class="s-krkn__logo-wrap" id="krkn-logo-wrap">
           <img src="img/krkn-logo.svg" alt="Krkn" class="s-krkn__logo">
@@ -146,8 +167,100 @@
       </div>
     </section>
 
-    <!-- ── S4: ECOSYSTEM MAP ──────────────────────────────── 50s -->
-    <section id="s-ecosystem" data-autoslide="50000">
+    <!-- ── S4: LIVE DEMO ────────────────────────────────────── 45s -->
+    <section id="s-demo" data-autoslide="45000">
+      <div class="s-demo2__header">
+        <div class="s-demo2__eyebrow">Watch it happen</div>
+        <h2 class="s-demo2__title">Krkn in Action</h2>
+      </div>
+
+      <div class="s-demo2__scene" id="d2-scene">
+
+        <!-- Engineer (external) -->
+        <div class="s-demo2__actor" id="d2-actor">
+          <div class="s-demo2__actor-icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="24" cy="14" r="7"/>
+              <path d="M8 42c0-8.84 7.16-16 16-16s16 7.16 16 16"/>
+            </svg>
+          </div>
+          <div class="s-demo2__actor-label">Platform Engineer</div>
+          <div class="s-demo2__cmd-box" id="d2-cmd">
+            <span class="s-demo2__cmd-prompt">$</span><span id="d2-cmd-text"></span><span class="s-demo2__cmd-cursor" id="d2-cursor">_</span>
+          </div>
+        </div>
+
+        <!-- Connector arrow -->
+        <div class="s-demo2__connector" id="d2-connector">
+          <svg class="s-demo2__conn-svg" viewBox="0 0 200 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path id="d2-conn-path" d="M10 25 L178 25" stroke="#EC1C24" stroke-width="2" stroke-linecap="round" stroke-dasharray="168" stroke-dashoffset="168"/>
+            <polygon id="d2-conn-head" points="174,19 190,25 174,31" fill="#EC1C24" opacity="0"/>
+          </svg>
+          <div class="s-demo2__conn-label" id="d2-conn-label" style="opacity:0">cpu-hog</div>
+        </div>
+
+        <!-- K8s Cluster -->
+        <div class="s-demo2__cluster" id="d2-cluster">
+          <div class="s-demo2__cluster-badge">Kubernetes Cluster — production</div>
+
+          <div class="s-demo2__metrics">
+            <div class="s-demo2__metric">
+              <span class="s-demo2__metric-key">p95 latency</span>
+              <span class="s-demo2__metric-val" id="d2-lat">120ms</span>
+            </div>
+            <div class="s-demo2__metric">
+              <span class="s-demo2__metric-key">cpu (worker-2)</span>
+              <span class="s-demo2__metric-val" id="d2-cpu">14%</span>
+            </div>
+            <div class="s-demo2__metric">
+              <span class="s-demo2__metric-key">error rate</span>
+              <span class="s-demo2__metric-val" id="d2-err">0.1%</span>
+            </div>
+          </div>
+
+          <div class="s-demo2__nodes">
+            <!-- Node 1 — stable throughout -->
+            <div class="s-demo2__node" id="d2-n1">
+              <div class="s-demo2__node-hdr">
+                <div class="s-demo2__node-dot" id="d2-n1-dot"></div>
+                <span class="s-demo2__node-name">worker-1</span>
+              </div>
+              <div class="s-demo2__pods">
+                <div class="s-demo2__pod" id="d2-pa">
+                  <div class="s-demo2__pod-dot" style="background:var(--green)"></div><span>frontend-replica</span>
+                </div>
+                <div class="s-demo2__pod" id="d2-pb">
+                  <div class="s-demo2__pod-dot" style="background:var(--green)"></div><span>api-service</span>
+                </div>
+              </div>
+            </div>
+            <!-- Node 2 — chaos target -->
+            <div class="s-demo2__node" id="d2-n2">
+              <div class="s-demo2__node-hdr">
+                <div class="s-demo2__node-dot" id="d2-n2-dot"></div>
+                <span class="s-demo2__node-name" id="d2-n2-name">worker-2</span>
+              </div>
+              <div class="s-demo2__pods" id="d2-n2-pods">
+                <div class="s-demo2__pod" id="d2-pc">
+                  <div class="s-demo2__pod-dot" style="background:var(--green)"></div><span>order-service</span>
+                </div>
+                <div class="s-demo2__pod" id="d2-pd">
+                  <div class="s-demo2__pod-dot" style="background:var(--green)"></div><span>payment-svc</span>
+                </div>
+                <!-- cpu-hog pod injected by JS -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- /scene -->
+
+      <!-- Activity log -->
+      <div class="s-demo2__log" id="d2-log"></div>
+    </section>
+
+    <!-- ── S5: ECOSYSTEM MAP (moved after demo) ──────────────── 28s -->
+    <section id="s-ecosystem" data-autoslide="28000">
       <div class="s-eco__header">
         <div class="s-eco__eyebrow">The complete toolkit</div>
         <h2 class="s-eco__title">The Krkn Ecosystem</h2>
@@ -228,178 +341,11 @@
       </div>
     </section>
 
-    <!-- ── S5: LIVE DEMO ──────────────────────────────────── 110s -->
-    <section id="s-demo" data-autoslide="110000">
-      <div class="s-demo__header">
-        <div class="s-demo__eyebrow">Watch it happen</div>
-        <h2 class="s-demo__title">Krkn in Action — Pod Failure Scenario</h2>
-      </div>
-
-      <!-- Cluster visualization (ported from v3) -->
-      <div class="s-demo__wrapper" id="demo-wrapper">
-        <div class="cluster" id="demo-cluster">
-          <svg id="demo-svg-layer" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <marker id="d-arr-r" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0.5,6 2.5,0 4.5" fill="#EC1C24"/></marker>
-              <marker id="d-arr-o" markerWidth="7" markerHeight="5" refX="6" refY="2.5" orient="auto"><polygon points="0 0.5,6 2.5,0 4.5" fill="#f97316"/></marker>
-              <filter id="d-chaos-glow"><feGaussianBlur stdDeviation="3" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
-            </defs>
-          </svg>
-
-          <div class="cluster-content">
-            <div class="cluster-boundary">
-              <!-- Phase bar -->
-              <div class="phase-bar">
-                <div class="phase-number" id="d-phase-num">&mdash;</div>
-                <div>
-                  <div class="phase-title" id="d-phase-title">Initializing</div>
-                  <div class="phase-subtitle" id="d-phase-subtitle"></div>
-                </div>
-              </div>
-
-              <!-- Traffic row -->
-              <div class="traffic-row">
-                <div class="users-block" id="d-users">
-                  <div class="user-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2" stroke-linecap="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-                  </div>
-                  <span class="users-label">Users</span>
-                </div>
-                <div class="flow-connector">
-                  <svg viewBox="0 0 56 14" fill="none"><line x1="0" y1="7" x2="46" y2="7" stroke="#EC1C24" stroke-width="1.5"/><polygon points="46,2.5 55,7 46,11.5" fill="#EC1C24"/></svg>
-                </div>
-                <div class="arch-card" id="d-ingress">
-                  <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>
-                  <span class="card-text">Ingress</span>
-                </div>
-                <div class="flow-connector">
-                  <svg viewBox="0 0 56 14" fill="none"><line x1="0" y1="7" x2="46" y2="7" stroke="#EC1C24" stroke-width="1.5"/><polygon points="46,2.5 55,7 46,11.5" fill="#EC1C24"/></svg>
-                </div>
-                <div class="arch-card" id="d-service">
-                  <div class="card-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><circle cx="12" cy="12" r="3"/><line x1="12" y1="3" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="21"/><line x1="3" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="21" y2="12"/></svg></div>
-                  <span class="card-text">Service</span>
-                </div>
-              </div>
-
-              <!-- Worker nodes -->
-              <div class="nodes-row">
-                <div class="worker-node" id="d-wn1">
-                  <div class="node-title">Worker Node 1</div>
-                  <div class="node-services">
-                    <span class="svc-badge">kubelet</span>
-                    <span class="svc-badge">kube-proxy</span>
-                    <span class="svc-badge">container runtime</span>
-                  </div>
-                  <div class="pods-row">
-                    <div class="pod-card" id="d-pod1">
-                      <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
-                      <div class="pod-label"><span><span class="pod-friendly-name">Frontend App</span><span class="pod-k8s-name">frontend-v2-7d4b</span></span></div>
-                      <div class="containers-grid"><span class="ctr-chip">react-app</span><span class="ctr-chip">nginx</span></div>
-                    </div>
-                    <div class="pod-card" id="d-pod2">
-                      <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
-                      <div class="pod-label"><span><span class="pod-friendly-name">Order Service</span><span class="pod-k8s-name">order-svc-3k8m</span></span></div>
-                      <div class="containers-grid"><span class="ctr-chip">order-api</span><span class="ctr-chip">envoy</span></div>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="worker-node" id="d-wn2">
-                  <div class="node-title">Worker Node 2</div>
-                  <div class="node-services">
-                    <span class="svc-badge">kubelet</span>
-                    <span class="svc-badge">kube-proxy</span>
-                    <span class="svc-badge">container runtime</span>
-                  </div>
-                  <div class="pods-row">
-                    <div class="pod-slot" id="d-pod3-slot">
-                      <div class="pod-card" id="d-pod3">
-                        <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
-                        <div class="fail-x" style="display:none"><svg viewBox="0 0 24 24" fill="none" stroke="#dc2626" stroke-width="3" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg></div>
-                        <div class="pod-label"><span><span class="pod-friendly-name">Frontend App</span><span class="pod-k8s-name">frontend-v2-9f2a</span></span></div>
-                        <div class="containers-grid"><span class="ctr-chip">react-app</span><span class="ctr-chip">nginx</span></div>
-                      </div>
-                    </div>
-                    <div class="pod-card" id="d-pod4">
-                      <div class="pod-status-bar"><div class="status-dot-el dot-green"></div><span class="status-text-el text-green">Healthy</span></div>
-                      <div class="pod-label"><span><span class="pod-friendly-name">Order Service</span><span class="pod-k8s-name">order-svc-5n1p</span></span></div>
-                      <div class="containers-grid"><span class="ctr-chip">order-api</span><span class="ctr-chip">envoy</span></div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Control plane -->
-              <div class="cp-row">
-                <div class="control-plane" id="d-cp">
-                  <div class="cp-title">Control Plane</div>
-                  <div class="cp-grid">
-                    <div class="cp-item cp-muted" id="d-etcd">
-                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg></div>
-                      <span class="cp-name">Cluster Memory</span><span class="cp-desc">etcd</span>
-                    </div>
-                    <div class="cp-item" id="d-apiserver">
-                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><circle cx="6" cy="6" r="1" fill="#EC1C24"/><circle cx="6" cy="18" r="1" fill="#EC1C24"/></svg></div>
-                      <span class="cp-name">API Gateway</span><span class="cp-desc">kube-apiserver</span>
-                    </div>
-                    <div class="cp-item cp-muted" id="d-scheduler">
-                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
-                      <span class="cp-name">Pod Scheduler</span><span class="cp-desc">kube-scheduler</span>
-                    </div>
-                    <div class="cp-item" id="d-controller">
-                      <div class="cp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#EC1C24" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div>
-                      <span class="cp-name">Self-Healer</span><span class="cp-desc">kube-controller-manager</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div><!-- /cluster-boundary -->
-
-            <!-- Krkn external -->
-            <div class="krkn-external">
-              <div class="krkn-ext-badge">External</div>
-              <div class="krkn-card" id="d-krkn">
-                <img src="img/krkn-logo.svg" alt="Krkn" class="krkn-card-logo">
-                <span class="krkn-title">Krkn</span>
-                <span class="krkn-subtitle">Chaos Engine</span>
-                <div class="krkn-cmd" id="d-krkn-cmd" style="display:none"></div>
-              </div>
-              <div class="slo-section">
-                <div class="slo-title">SLO Monitor</div>
-                <div class="slo-metrics">
-                  <div class="slo-row"><span class="slo-label">Availability</span><span class="slo-value slo-healthy" id="d-slo-avail">100%</span></div>
-                  <div class="slo-row"><span class="slo-label">p95 Latency</span><span class="slo-value slo-healthy" id="d-slo-latency">120ms</span></div>
-                  <div class="slo-row"><span class="slo-label">Error Rate</span><span class="slo-value slo-healthy" id="d-slo-error">0.1%</span></div>
-                </div>
-              </div>
-            </div>
-          </div><!-- /cluster-content -->
-
-          <!-- Lifecycle bar -->
-          <div class="lifecycle-section" id="d-lifecycle" style="display:none">
-            <div class="lifecycle-title" id="d-lifecycle-title"></div>
-            <div class="lifecycle-flow" id="d-lifecycle-flow"></div>
-          </div>
-
-          <!-- Overlays -->
-          <div class="scene-overlay" id="d-scene-overlay" style="display:none">
-            <div class="scene-card">
-              <div class="scene-title" id="d-scene-title"></div>
-              <div class="scene-subtitle" id="d-scene-sub"></div>
-            </div>
-          </div>
-          <div class="verify-overlay" id="d-verify" style="display:none"></div>
-          <div class="scorecard-overlay" id="d-scorecard" style="display:none"></div>
-          <div class="transition-overlay" id="d-transition"></div>
-        </div><!-- /demo-cluster -->
-      </div><!-- /demo-wrapper -->
-    </section>
-
-    <!-- ── S6: TOOL TOUR (vertical sub-slides) ───────────── 20s each -->
+    <!-- ── S6: TOOL TOUR (vertical sub-slides) ───────────── 14s each -->
     <section>
 
       <!-- 6a: krkn-hub -->
-      <section id="s-hub" data-autoslide="22000">
+      <section id="s-hub" data-autoslide="14000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
             <div class="s-tool__eyebrow">Scenario Library</div>
@@ -421,18 +367,62 @@
               <div class="hub-card" data-delay="4">memory-hog</div>
               <div class="hub-card" data-delay="5">io-hog</div>
               <div class="hub-card" data-delay="6">pvc-scenarios</div>
-              <div class="hub-card" data-delay="7">time-scenarios</div>
-              <div class="hub-card" data-delay="8">dns-outage</div>
-              <div class="hub-card" data-delay="9">zone-outage</div>
-              <div class="hub-card" data-delay="10">syn-flood</div>
-              <div class="hub-card" data-delay="11">etcd-split-brain</div>
+              <div class="hub-card" data-delay="7">dns-outage</div>
+              <div class="hub-card" data-delay="8">zone-outage</div>
+            </div>
+            <div class="hub-more">...and 15+ more scenarios on quay.io/krkn-chaos</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6b: Krkn AI (moved after hub) -->
+      <section id="s-ai" data-autoslide="16000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Intelligent Automation</div>
+            <h2 class="s-tool__name">Krkn AI</h2>
+            <p class="s-tool__desc">Uses evolutionary algorithms guided by your SLOs and Prometheus metrics to automatically discover and rank the most impactful chaos experiments for your cluster.</p>
+            <ul class="s-tool__bullets">
+              <li>Generates failure scenarios from cluster topology</li>
+              <li>Fitness driven by real Prometheus metrics</li>
+              <li>Ranks scenarios by measured system impact</li>
+              <li>Surfaces unknown failure modes humans miss</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-ai__pipeline" id="ai-pipeline">
+              <div class="s-ai__stage" id="ai-s1">
+                <div class="s-ai__stage-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#0E58A0" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
+                </div>
+                <div class="s-ai__stage-label">Cluster Config<br><small>topology + SLOs</small></div>
+              </div>
+              <div class="s-ai__arrow" id="ai-a1">→</div>
+              <div class="s-ai__stage" id="ai-s2">
+                <div class="s-ai__stage-icon s-ai__stage-icon--spin">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v9h-9"/></svg>
+                </div>
+                <div class="s-ai__stage-label">Evolutionary<br><small>Engine evolving…</small></div>
+              </div>
+              <div class="s-ai__arrow" id="ai-a2">→</div>
+              <div class="s-ai__stage" id="ai-s3">
+                <div class="s-ai__stage-icon">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+                </div>
+                <div class="s-ai__stage-label">Ranked Results<br><small>by impact score</small></div>
+              </div>
+            </div>
+            <div class="s-ai__results" id="ai-results" style="opacity:0">
+              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Impact 82</span></div>
+              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Impact 74</span></div>
+              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Impact 61</span></div>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- 6b: krknctl -->
-      <section id="s-krknctl" data-autoslide="22000">
+      <!-- 6c: krknctl -->
+      <section id="s-krknctl" data-autoslide="14000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
             <div class="s-tool__eyebrow">Command-Line Interface</div>
@@ -460,7 +450,7 @@
       </section>
 
       <!-- 6c: Operator -->
-      <section id="s-operator" data-autoslide="22000">
+      <section id="s-operator" data-autoslide="14000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
             <div class="s-tool__eyebrow">Kubernetes Native</div>
@@ -491,54 +481,8 @@
         </div>
       </section>
 
-      <!-- 6d: Krkn AI -->
-      <section id="s-ai" data-autoslide="24000">
-        <div class="s-tool__layout">
-          <div class="s-tool__left">
-            <div class="s-tool__eyebrow">Intelligent Automation</div>
-            <h2 class="s-tool__name">Krkn AI</h2>
-            <p class="s-tool__desc">Uses evolutionary algorithms guided by your SLOs and health checks to automatically discover and rank the most impactful chaos experiments for your cluster.</p>
-            <ul class="s-tool__bullets">
-              <li>Generates experiments from cluster topology</li>
-              <li>Guided by real SLOs — not random failures</li>
-              <li>Ranks scenarios by resilience impact score</li>
-              <li>Surfaces previously unknown failure modes</li>
-            </ul>
-          </div>
-          <div class="s-tool__right">
-            <div class="s-ai__pipeline" id="ai-pipeline">
-              <div class="s-ai__stage" id="ai-s1">
-                <div class="s-ai__stage-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#0E58A0" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v4l3 3"/></svg>
-                </div>
-                <div class="s-ai__stage-label">Cluster Config<br><small>components + SLOs</small></div>
-              </div>
-              <div class="s-ai__arrow" id="ai-a1">→</div>
-              <div class="s-ai__stage" id="ai-s2">
-                <div class="s-ai__stage-icon s-ai__stage-icon--spin">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#f97316" stroke-width="1.5" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-9-9"/><path d="M21 3v9h-9"/></svg>
-                </div>
-                <div class="s-ai__stage-label">Evolutionary<br><small>Engine evolving…</small></div>
-              </div>
-              <div class="s-ai__arrow" id="ai-a2">→</div>
-              <div class="s-ai__stage" id="ai-s3">
-                <div class="s-ai__stage-icon">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="1.5" stroke-linecap="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                </div>
-                <div class="s-ai__stage-label">Ranked Results<br><small>by impact score</small></div>
-              </div>
-            </div>
-            <div class="s-ai__results" id="ai-results" style="opacity:0">
-              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Score 82</span></div>
-              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Score 74</span></div>
-              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Score 61</span></div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <!-- 6e: Dashboard -->
-      <section id="s-dashboard" data-autoslide="22000">
+      <section id="s-dashboard" data-autoslide="14000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
             <div class="s-tool__eyebrow">Visual Control Center</div>
@@ -558,7 +502,7 @@
       </section>
 
       <!-- 6f: Krkn Assist -->
-      <section id="s-assist" data-autoslide="22000">
+      <section id="s-assist" data-autoslide="14000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
             <div class="s-tool__eyebrow">AI-Powered Assistant</div>
@@ -587,16 +531,16 @@
 
     </section><!-- /tool tour vertical group -->
 
-    <!-- ── S7: CTA ──────────────────────────────────────── 35s -->
-    <section id="s-cta" data-autoslide="35000">
+    <!-- ── S7: CTA ──────────────────────────────────────── 22s -->
+    <section id="s-cta" data-autoslide="22000">
       <div class="s-cta__layout">
         <div class="s-cta__left">
-          <div class="s-cta__eyebrow">Build confidence in your infrastructure</div>
-          <h2 class="s-cta__title">Don't wait for<br><span class="s-cta__title--accent">2 AM</span> to find<br>your weaknesses.</h2>
-          <p class="s-cta__sub">Start breaking things intentionally — on your terms.</p>
+          <div class="s-cta__eyebrow">Open Source · CNCF Sandbox</div>
+          <h2 class="s-cta__title">Find failures.<br>Before they<br><span class="s-cta__title--accent">find you.</span></h2>
+          <p class="s-cta__sub">Run controlled chaos experiments and harden your Kubernetes cluster before incidents reveal its weaknesses.</p>
           <div class="s-cta__links">
             <div class="s-cta__link">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2z"/><path d="M8 12h8M12 8v8"/></svg>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
               krkn-chaos.dev
             </div>
             <div class="s-cta__link">
@@ -607,23 +551,37 @@
           <img src="img/cncf-white.svg" alt="CNCF Sandbox" class="s-cta__cncf" id="cta-cncf">
         </div>
         <div class="s-cta__right">
-          <div class="s-cta__score-wrap" id="cta-score-wrap">
-            <div class="s-cta__score-label">Resiliency Score</div>
-            <div class="s-cta__score-ring" id="cta-score-ring">
-              <svg viewBox="0 0 200 200" class="s-cta__score-svg">
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#1e293b" stroke-width="12"/>
-                <circle cx="100" cy="100" r="80" fill="none" stroke="#EC1C24" stroke-width="12"
-                  stroke-dasharray="502" stroke-dashoffset="502"
-                  stroke-linecap="round" transform="rotate(-90 100 100)"
-                  id="cta-score-arc"/>
-              </svg>
-              <div class="s-cta__score-num" id="cta-score-num">0</div>
+          <div class="s-cta__quick-start" id="cta-quick-start">
+            <div class="s-cta__qs-title">Get started in minutes</div>
+            <div class="s-cta__qs-steps">
+              <div class="s-cta__qs-step">
+                <div class="s-cta__qs-num">01</div>
+                <div>
+                  <div class="s-cta__qs-step-label">Install the CLI</div>
+                  <div class="s-cta__qs-step-code">pip install krknctl</div>
+                </div>
+              </div>
+              <div class="s-cta__qs-divider"></div>
+              <div class="s-cta__qs-step">
+                <div class="s-cta__qs-num">02</div>
+                <div>
+                  <div class="s-cta__qs-step-label">Pick a scenario</div>
+                  <div class="s-cta__qs-step-code">krknctl list</div>
+                </div>
+              </div>
+              <div class="s-cta__qs-divider"></div>
+              <div class="s-cta__qs-step">
+                <div class="s-cta__qs-num">03</div>
+                <div>
+                  <div class="s-cta__qs-step-label">Run &amp; measure</div>
+                  <div class="s-cta__qs-step-code">krknctl run cpu-hog</div>
+                </div>
+              </div>
             </div>
-            <div class="s-cta__score-sub">out of 100</div>
           </div>
           <div class="s-cta__qr-wrap" id="cta-qr-wrap">
             <div id="cta-qr-canvas" class="s-cta__qr"></div>
-            <div class="s-cta__qr-label">Scan to get started</div>
+            <div class="s-cta__qr-label">krkn-chaos.dev</div>
           </div>
         </div>
       </div>
@@ -636,20 +594,24 @@
 <div id="krkn-controls">
   <div id="kc-dots"></div>
   <div id="kc-buttons">
-    <button id="kc-prev" title="Previous act">
+    <button id="kc-prev" title="Previous">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="15 18 9 12 15 6"/></svg>
+      Prev
     </button>
     <button id="kc-playpause" title="Play / Pause">
       <svg class="kc-icon-pause" viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
       <svg class="kc-icon-play" viewBox="0 0 24 24" fill="currentColor" style="display:none"><polygon points="5,3 19,12 5,21"/></svg>
     </button>
-    <button id="kc-next" title="Next act">
+    <button id="kc-next" title="Next">
+      Next
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><polyline points="9 18 15 12 9 6"/></svg>
     </button>
+    <button id="kc-zoom" class="zoom-1" title="Zoom text">A+</button>
   </div>
   <button id="kc-fullscreen" title="Fullscreen">
     <svg class="kc-icon-enter" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
     <svg class="kc-icon-exit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+    FS
   </button>
 </div>
 

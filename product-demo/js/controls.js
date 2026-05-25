@@ -1,7 +1,5 @@
 /* ───────────────────────────────────────────────────────────────
-   controls.js — control bar: act dots, prev/next, play/pause, fullscreen
-   Runs BEFORE main.js initialises Reveal, so we listen for the
-   `reveal:ready` event and also poll lightly until Reveal is ready.
+   controls.js — control bar: act dots, prev/next, play/pause, zoom, fullscreen
    ─────────────────────────────────────────────────────────────── */
 
 (function() {
@@ -13,8 +11,8 @@
     { label: 'Hook'      },
     { label: 'Chaos'     },
     { label: 'Krkn'      },
-    { label: 'Ecosystem' },
     { label: 'Demo'      },
+    { label: 'Ecosystem' },
     { label: 'Tools'     },
     { label: 'Start'     },
   ];
@@ -26,9 +24,30 @@
   var iconPause  = btnPlay.querySelector('.kc-icon-pause');
   var iconPlay   = btnPlay.querySelector('.kc-icon-play');
   var btnNext    = document.getElementById('kc-next');
+  var btnZoom    = document.getElementById('kc-zoom');
   var btnFS      = document.getElementById('kc-fullscreen');
   var iconEnter  = btnFS.querySelector('.kc-icon-enter');
   var iconExit   = btnFS.querySelector('.kc-icon-exit');
+
+  /* ── Zoom (A+) ────────────────────────────────────────────── */
+  var zoomLevel = 1;
+  var zoomScales = [1, 1.18, 1.38];
+  var zoomLabels = ['A+', 'A++', 'A'];
+  var zoomClasses = ['zoom-1', 'zoom-2', 'zoom-3'];
+
+  function applyZoom() {
+    document.documentElement.style.setProperty('--ui-zoom', zoomScales[zoomLevel - 1]);
+    document.querySelector('.reveal').style.fontSize = (18 * zoomScales[zoomLevel - 1]) + 'px';
+    btnZoom.textContent = zoomLabels[zoomLevel - 1];
+    zoomClasses.forEach(function(c) { btnZoom.classList.remove(c); });
+    btnZoom.classList.add(zoomClasses[zoomLevel - 1]);
+  }
+
+  btnZoom.addEventListener('click', function() {
+    zoomLevel = (zoomLevel % 3) + 1;
+    applyZoom();
+    showBar();
+  });
 
   var dots       = [];
   var hideTimer  = null;
@@ -66,7 +85,7 @@
     clearTimeout(hideTimer);
     hideTimer = setTimeout(function() {
       bar.classList.add('kc-hidden');
-    }, 3500);
+    }, 2000);
   }
 
   document.addEventListener('mousemove', showBar);
