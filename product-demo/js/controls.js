@@ -8,16 +8,16 @@
      The tool-tour vertical group (index 5) shows as one dot.
   ─────────────────────────────────────────────────────────────── */
   var ACTS = [
-    { label: 'Hook'      },
+    { label: 'Problem'   },
     { label: 'Chaos'     },
     { label: 'Krkn'      },
     { label: 'Demo'      },
     { label: 'Ecosystem' },
     { label: 'Hub'       },
+    { label: 'Dashboard' },
     { label: 'AI'        },
     { label: 'CLI'       },
     { label: 'Operator'  },
-    { label: 'Dashboard' },
     { label: 'Assist'    },
     { label: 'Start'     },
   ];

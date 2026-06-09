@@ -40,66 +40,8 @@ function animateCTA(section) {
     })
 
     /* QR code */
-    .call(function() { _renderQR(); }, null, '+=4.0')
-    .to('#cta-qr-wrap', { opacity: 1, y: 0, duration: .7 }, '+=.2');
+    .to('#cta-qr-wrap', { opacity: 1, y: 0, duration: .7 }, '+=4.0');
 
   return { timeline: tl, cleanup: function() { if (body) body.innerHTML = ''; } };
 }
 
-/* ── QR code (canvas-based, no external lib needed) ────────────── */
-function _renderQR() {
-  var container = document.getElementById('cta-qr-canvas');
-  if (!container) return;
-  container.innerHTML = '';
-
-  var canvas = document.createElement('canvas');
-  canvas.width  = 120;
-  canvas.height = 120;
-  var ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, 120, 120);
-  ctx.fillStyle = '#000000';
-
-  var cellSize = 4;
-  var margin   = 8;
-  var cols     = Math.floor((120 - margin * 2) / cellSize);
-
-  var seed = 'krkn-chaos.dev'.split('').reduce(function(acc, c) { return acc + c.charCodeAt(0); }, 0);
-  function prng(x, y) {
-    var v = (x * 73856093) ^ (y * 19349663) ^ seed;
-    return ((v >> 16) & 0xffff) % 3 !== 0;
-  }
-
-  for (var row = 0; row < cols; row++) {
-    for (var col = 0; col < cols; col++) {
-      if (prng(col, row)) {
-        ctx.fillRect(margin + col * cellSize, margin + row * cellSize, cellSize - 1, cellSize - 1);
-      }
-    }
-  }
-
-  function finder(ox, oy) {
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(ox, oy, 28, 28);
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(ox, oy, 28, 28);
-    ctx.fillStyle = '#ffffff';
-    ctx.fillRect(ox + 4, oy + 4, 20, 20);
-    ctx.fillStyle = '#000000';
-    ctx.fillRect(ox + 8, oy + 8, 12, 12);
-  }
-  finder(margin, margin);
-  finder(120 - margin - 28, margin);
-  finder(margin, 120 - margin - 28);
-
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(120 - margin - 28, 120 - margin - 28, 28, 28);
-  ctx.fillStyle = '#000000';
-  for (var i = 0; i < cols - 14; i += 2) {
-    ctx.fillRect(margin + 24 + i * cellSize, margin + 24, cellSize - 1, cellSize - 1);
-    ctx.fillRect(margin + 24, margin + 24 + i * cellSize, cellSize - 1, cellSize - 1);
-  }
-
-  container.appendChild(canvas);
-}
