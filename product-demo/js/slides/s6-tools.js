@@ -119,17 +119,19 @@ function animateOperator(section) {
     .call(function() {
       if (!body) return;
       var lines = [
-        { html: '<span class="t-output t-output--dim">apiVersion: chaos.krkn.dev/v1alpha1</span>',      pause: .2 },
-        { html: '<span class="t-output t-output--dim">kind: PodScenario</span>',                        pause: .2 },
-        { html: '<span class="t-output t-output--dim">metadata:</span>',                                pause: .2 },
-        { html: '<span class="t-output t-output--dim">  name: nightly-frontend-delete</span>',         pause: .3 },
-        { html: '<span class="t-output t-output--dim">spec:</span>',                                    pause: .2 },
-        { html: '<span class="t-output t-output--dim">  namespace: production</span>',                  pause: .2 },
-        { html: '<span class="t-output t-output--dim">  label_selector: app=frontend</span>',           pause: .2 },
-        { html: '<span class="t-output t-output--dim">  kill_count: 1</span>',                          pause: .2 },
-        { html: '<span class="t-output t-output--dim">  wait_recovery: true</span>',                    pause: .2 },
-        { html: '<span class="t-output t-output--dim">  schedule: "0 2 * * *"</span>',                  pause: 1.2 },
-        { html: '<span class="t-output t-output--green">✔  Applied — reconciling…</span>',             pause: 0 },
+        { html: '<span class="t-output t-output--dim">apiVersion: chaos.krkn.dev/v1alpha1</span>',          pause: .2 },
+        { html: '<span class="t-output t-output--dim">kind: PodScenario</span>',                            pause: .2 },
+        { html: '<span class="t-output t-output--dim">metadata:</span>',                                    pause: .2 },
+        { html: '<span class="t-output t-output--dim">  name: nightly-frontend-delete</span>',              pause: .3 },
+        { html: '<span class="t-output t-output--dim">spec:</span>',                                        pause: .2 },
+        { html: '<span class="t-output t-output--dim">  namespace: production</span>',                      pause: .2 },
+        { html: '<span class="t-output t-output--dim">  labelSelector:</span>',                             pause: .2 },
+        { html: '<span class="t-output t-output--dim">    matchLabels:</span>',                             pause: .2 },
+        { html: '<span class="t-output t-output--dim">      app: frontend</span>',                          pause: .2 },
+        { html: '<span class="t-output t-output--dim">  killCount: 1</span>',                               pause: .2 },
+        { html: '<span class="t-output t-output--dim">  waitRecovery: true</span>',                         pause: .2 },
+        { html: '<span class="t-output t-output--dim">  schedule: "0 2 * * *"</span>',                      pause: 1.2 },
+        { html: '<span class="t-output t-output--green">✔  Applied — reconciling…</span>',                 pause: 0 },
       ];
       typeInto(body, lines, 0);
     })

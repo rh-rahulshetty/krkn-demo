@@ -644,7 +644,7 @@ html, body { background: var(--bg); }
 .s-terminal__bar { background: #161b22; padding: 9px 14px; display: flex; align-items: center; gap: 6px; }
 .s-terminal__dot { width: 10px; height: 10px; border-radius: 50%; }
 .s-terminal__title { margin-left: 8px; font-family: var(--mono); font-size: 12px; color: var(--text-sub); }
-.s-terminal__body { padding: 16px 20px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: #e6edf3; min-height: 200px; text-align: left; }
+.s-terminal__body { padding: 16px 20px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: #e6edf3; min-height: 200px; text-align: left; white-space: pre-wrap; }
 
 /* Terminal token colours */
 .t-prompt { color: #7ee787; }

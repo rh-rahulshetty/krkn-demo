@@ -372,60 +372,7 @@
         </div>
     </section>
 
-    <!-- ── S7: Dashboard ────────────────────────────────── -->
-    <section id="s-dashboard" data-autoslide="10000">
-        <div class="s-tool__layout">
-          <div class="s-tool__left">
-            <div class="s-tool__eyebrow">Visual Control Center</div>
-            <h2 class="s-tool__name">Krkn Dashboard</h2>
-            <p class="s-tool__desc">A browser-based UI sitting on top of krkn-hub — run scenarios, watch live output, and replay or compare past experiments without touching the CLI.</p>
-            <ul class="s-tool__bullets">
-              <li>Pick scenarios from a UI — no command memorization</li>
-              <li>Live output streaming as runs execute</li>
-              <li>Save and replay past experiments</li>
-              <li>Elasticsearch + Grafana integration for history</li>
-            </ul>
-          </div>
-          <div class="s-tool__right s-dashboard__right">
-            <img src="img/dashboard-run.png" alt="Krkn Dashboard" class="s-dashboard__img" id="dashboard-img">
-          </div>
-        </div>
-    </section>
-
-    <!-- ── S8: Krkn AI ──────────────────────────────────── -->
-    <section id="s-ai" data-autoslide="14000">
-        <div class="s-tool__layout">
-          <div class="s-tool__left">
-            <div class="s-tool__eyebrow">Intelligent Automation</div>
-            <h2 class="s-tool__name">Krkn AI</h2>
-            <p class="s-tool__desc">Uses evolutionary algorithms guided by your SLOs and Prometheus metrics to automatically discover and rank the most impactful chaos experiments for your cluster.</p>
-            <ul class="s-tool__bullets">
-              <li>Generates failure scenarios from cluster topology</li>
-              <li>Fitness driven by real Prometheus metrics</li>
-              <li>Ranks scenarios by measured system impact</li>
-              <li>Surfaces unknown failure modes humans miss</li>
-            </ul>
-          </div>
-          <div class="s-tool__right">
-            <div class="s-terminal" id="ai-terminal">
-              <div class="s-terminal__bar">
-                <span class="s-terminal__dot" style="background:#ef4444"></span>
-                <span class="s-terminal__dot" style="background:#f59e0b"></span>
-                <span class="s-terminal__dot" style="background:#22c55e"></span>
-                <span class="s-terminal__title">krkn-ai</span>
-              </div>
-              <div class="s-terminal__body" id="ai-body"></div>
-            </div>
-            <div class="s-ai__results" id="ai-results" style="opacity:0">
-              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Fitness 82</span></div>
-              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Fitness 74</span></div>
-              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Fitness 61</span></div>
-            </div>
-          </div>
-        </div>
-    </section>
-
-    <!-- ── S9: krknctl ──────────────────────────────────── -->
+    <!-- ── S7: krknctl ──────────────────────────────────── -->
     <section id="s-krknctl" data-autoslide="12000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
@@ -453,7 +400,27 @@
         </div>
     </section>
 
-    <!-- ── S10: Operator ─────────────────────────────────── -->
+    <!-- ── S8: Dashboard ────────────────────────────────── -->
+    <section id="s-dashboard" data-autoslide="10000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Visual Control Center</div>
+            <h2 class="s-tool__name">Krkn Dashboard</h2>
+            <p class="s-tool__desc">A browser-based UI sitting on top of krkn-hub — run scenarios, watch live output, and replay or compare past experiments without touching the CLI.</p>
+            <ul class="s-tool__bullets">
+              <li>Pick scenarios from a UI — no command memorization</li>
+              <li>Live output streaming as runs execute</li>
+              <li>Save and replay past experiments</li>
+              <li>Elasticsearch + Grafana integration for history</li>
+            </ul>
+          </div>
+          <div class="s-tool__right s-dashboard__right">
+            <img src="img/dashboard-run.png" alt="Krkn Dashboard" class="s-dashboard__img" id="dashboard-img">
+          </div>
+        </div>
+    </section>
+
+    <!-- ── S9: Operator ─────────────────────────────────── -->
     <section id="s-operator" data-autoslide="12000">
         <div class="s-tool__layout">
           <div class="s-tool__left">
@@ -480,6 +447,39 @@
             <div class="s-operator__badge" id="operator-badge" style="opacity:0">
               <svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="9" fill="#1a2e1a" stroke="#22c55e" stroke-width="1.5"/><path d="M6 10l3 3 5-5" stroke="#22c55e" stroke-width="2" stroke-linecap="round"/></svg>
               Reconciled by Kubernetes
+            </div>
+          </div>
+        </div>
+    </section>
+
+    <!-- ── S10: Krkn AI ──────────────────────────────────── -->
+    <section id="s-ai" data-autoslide="14000">
+        <div class="s-tool__layout">
+          <div class="s-tool__left">
+            <div class="s-tool__eyebrow">Intelligent Automation</div>
+            <h2 class="s-tool__name">Krkn AI</h2>
+            <p class="s-tool__desc">Uses evolutionary algorithms guided by your SLOs and Prometheus metrics to automatically discover and rank the most impactful chaos experiments for your cluster.</p>
+            <ul class="s-tool__bullets">
+              <li>Generates failure scenarios from cluster topology</li>
+              <li>Fitness driven by real Prometheus metrics</li>
+              <li>Ranks scenarios by measured system impact</li>
+              <li>Surfaces unknown failure modes humans miss</li>
+            </ul>
+          </div>
+          <div class="s-tool__right">
+            <div class="s-terminal" id="ai-terminal">
+              <div class="s-terminal__bar">
+                <span class="s-terminal__dot" style="background:#ef4444"></span>
+                <span class="s-terminal__dot" style="background:#f59e0b"></span>
+                <span class="s-terminal__dot" style="background:#22c55e"></span>
+                <span class="s-terminal__title">krkn-ai</span>
+              </div>
+              <div class="s-terminal__body" id="ai-body"></div>
+            </div>
+            <div class="s-ai__results" id="ai-results" style="opacity:0">
+              <div class="s-ai__result-row" style="--score:82;--rank-color:#EC1C24">#1 pod-scenarios <span class="s-ai__score">Fitness 82</span></div>
+              <div class="s-ai__result-row" style="--score:74;--rank-color:#f97316">#2 network-chaos <span class="s-ai__score">Fitness 74</span></div>
+              <div class="s-ai__result-row" style="--score:61;--rank-color:#f59e0b">#3 cpu-hog <span class="s-ai__score">Fitness 61</span></div>
             </div>
           </div>
         </div>

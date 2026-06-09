@@ -14,10 +14,10 @@
     { label: 'Demo'      },
     { label: 'Ecosystem' },
     { label: 'Hub'       },
-    { label: 'Dashboard' },
-    { label: 'AI'        },
     { label: 'CLI'       },
+    { label: 'Dashboard' },
     { label: 'Operator'  },
+    { label: 'AI'        },
     { label: 'Assist'    },
     { label: 'Start'     },
   ];
