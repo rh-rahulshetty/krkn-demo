@@ -25,8 +25,11 @@ function animateHub(section) {
   var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
   var cards = section.querySelectorAll('.hub-card');
 
+  var more = section.querySelector('.hub-more');
+
   gsap.set(['#s-hub .s-tool__eyebrow','#s-hub .s-tool__name','#s-hub .s-tool__desc','#s-hub .s-tool__bullets'], { opacity: 0, x: -24 });
   gsap.set(cards, { opacity: 0, scale: .9, y: 10 });
+  if (more) gsap.set(more, { opacity: 0, y: 8 });
 
   tl
     .to('#s-hub .s-tool__eyebrow', { opacity: 1, x: 0, duration: .5 })
@@ -34,7 +37,9 @@ function animateHub(section) {
     .to('#s-hub .s-tool__desc',    { opacity: 1, x: 0, duration: .5 }, '-=.1')
     .to('#s-hub .s-tool__bullets', { opacity: 1, x: 0, duration: .5 }, '-=.1')
     /* Cascade hub cards */
-    .to(cards, { opacity: 1, scale: 1, y: 0, duration: .45, stagger: .07 }, '+=.3');
+    .to(cards, { opacity: 1, scale: 1, y: 0, duration: .45, stagger: .07 }, '+=.3')
+    /* Show "more" text after all cards have appeared */
+    .to(more, { opacity: 1, y: 0, duration: .5 }, '+=.2');
 
   /* Pulse highlight each card in turn */
   tl.call(function() {
