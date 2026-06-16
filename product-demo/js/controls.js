@@ -35,7 +35,7 @@
   var iconExit   = btnFS.querySelector('.kc-icon-exit');
 
   /* ── Zoom (A+) ────────────────────────────────────────────── */
-  var zoomLevel = 1;
+  var zoomLevel = 3;
   var zoomScales = [1, 1.18, 1.38];
   var zoomLabels = ['A+', 'A++', 'A'];
   var zoomClasses = ['zoom-1', 'zoom-2', 'zoom-3'];
@@ -174,6 +174,7 @@
     setActiveDot(Reveal.getIndices().h);
     /* Sync pause/play icon with Reveal's initial auto-slide state */
     setPlaying(!Reveal.isAutoSlidePaused());
+    applyZoom();
   }, 100);
 
 })();

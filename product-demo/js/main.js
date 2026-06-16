@@ -50,7 +50,7 @@ function dispatchSlide(section) {
 Reveal.initialize({
   hash:               false,
   loop:               true,
-  autoSlide:          14000,          /* fallback; each section overrides via data-autoslide */
+  autoSlide:          18000,          /* fallback; each section overrides via data-autoslide */
   autoSlideStoppable: true,
   transition:         'fade',
   transitionSpeed:    'slow',
@@ -61,8 +61,8 @@ Reveal.initialize({
   mouseWheel:         false,
   keyboard:           true,
   center:             true,
-  width:              1920,
-  height:             1080,
+  width:              1391,
+  height:             783,
   margin:             0,
   minScale:           0.1,
   maxScale:           2.0,
