@@ -93,12 +93,13 @@ html, body { background: var(--bg); }
 @keyframes blastRing     { 0%{transform:scale(1);opacity:.8;stroke-width:3} 100%{transform:scale(2.5);opacity:0;stroke-width:.5} }
 
 /* ═══════════════════════════════════════════════ S1 — HOOK */
-#s-hook { gap: 36px; padding: 52px 120px; }
+#s-hook { gap: 36px; padding: 52px 120px; align-items: center; }
 
 .s-hook__time {
   font-family: var(--mono); font-size: 13px; color: var(--text-sub);
   letter-spacing: .1em; text-transform: uppercase;
   opacity: 0;
+  width: 100%; max-width: 820px; text-align: center;
 }
 
 /* ── Incident timeline ── */
@@ -158,11 +159,13 @@ html, body { background: var(--bg); }
   font-size: 44px; font-weight: 700; color: var(--text);
   line-height: 1.2; letter-spacing: -.02em;
   opacity: 0; transform: translateY(20px);
+  width: 100%; max-width: 820px; text-align: left;
 }
 
 .s-hook__answer {
   font-size: 22px; color: var(--text-sec);
   opacity: 0;
+  width: 100%; max-width: 820px; text-align: left;
 }
 
 /* ═══════════════════════════════════════════════ S2 — CHAOS ENGINEERING */
